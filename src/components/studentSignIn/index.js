@@ -1,2 +1,2 @@
-import studentSignIn from "./studentSignIn";
-export default studentSignIn;
+import StudentSignIn from "./studentSignIn";
+export default StudentSignIn;

@@ -1,15 +1,16 @@
 import React from 'react'
-import { studentSignUp, studentSignIn } from '../../components/index';
+import { StudentSignUp, StudentSignIn } from '../../components/index';
 import PublicRoute from "./publicRoute";
 
-const PublicRoutes = () => {
+const publicRoutes = (props) => {
     const routes = [
-        { path: "/studentSignUp", component: studentSignUp },
-        { path: "/studentSignIn", component: studentSignIn },
-        { path: "/", component: studentSignIn }
+        // { path: "/", component: StudentSignUp },
+        { path: "/studentSignUp", component: StudentSignUp },
+        { path: "/studentSignIn", component: StudentSignIn },
+      
     ];
     return routes.map((route, index) => {
-        return <PublicRoute key={index} path={route.path} component={route.component} />
+        return <PublicRoute key={index} path={route.path} component={(prop) => <route.component test={props} {...prop} />} />
     });
 }
-export default PublicRoutes;
+export default publicRoutes;

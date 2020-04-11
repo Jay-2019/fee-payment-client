@@ -1,2 +1,2 @@
-import studentSignUp from './studentSignUp';
-export default studentSignUp;
+import StudentSignUp from './studentSignUp';
+export default StudentSignUp;
