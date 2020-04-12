@@ -33,14 +33,17 @@ export default function studentSignIn(props) {
           .then(response => {
             console.log(response.data._id);
             localStorage.setItem("token", response.data._id);
-            return props.history.push("/studentProfile");
+            return props.history.push(
+              "/studentProfile/" + localStorage.getItem("token")
+            );
           })
           .catch(error => error.message);
       }}
     >
       <Form>
         <br />
-        <div className="card text-center">
+        <div className="d-flex justify-content-center">
+        <div className="card w-75 text-center">
           <div className="card-header">
             <h2>Student SignIn</h2>
           </div>
@@ -90,6 +93,7 @@ export default function studentSignIn(props) {
           <div className="card-footer text-muted">
             Faculty of engineering & technology
           </div>
+        </div>
         </div>
       </Form>
     </Formik>

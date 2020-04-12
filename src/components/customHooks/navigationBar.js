@@ -1,8 +1,10 @@
 import React from 'react'
+import { Link } from "react-router-dom";
 
 export default function useNavigationBar() {
     return (
         <>
+
             {/* navbar navbar-dark bg-dark */}
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a className="navbar-brand" href="/">Navbar</a>
@@ -11,11 +13,24 @@ export default function useNavigationBar() {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className="navbar-nav">
-                        <a className="nav-item nav-link " href="/about">About <span className="sr-only">(current)</span></a>
-                        <a className="nav-item nav-link" href="/myProfile">My Profile</a>
-                        <a className="nav-item nav-link" href="/courseFee">Course Fee</a>
-                        <a className="nav-item nav-link" href="/backFee">Back Fee</a>
-                        <a className="nav-item nav-link " href="/feeReceipts">Fee Receipts</a>
+                        <Link className="nav-item nav-link " to={"/about"} >
+                            About
+                        </Link>
+                        <Link className="nav-item nav-link " to={"/myProfile/" + localStorage.getItem("token")} >
+                            My Profile
+                        </Link>
+                        <Link className="nav-item nav-link " to={"/courseFee/" + localStorage.getItem("token")} >
+                            Course Fee
+                        </Link>
+                        <Link className="nav-item nav-link " to={"/backFee/" + localStorage.getItem("token")} >
+                            Back Fee
+                              </Link>
+                        <Link className="nav-item nav-link " to={"/feeReceipts/" + localStorage.getItem("token")} >
+                            Fee Receipt
+                        </Link>
+                        <Link className="nav-item nav-link " to={"/signOut"} >
+                            Sign Out
+                        </Link>
                     </div>
                 </div>
             </nav>

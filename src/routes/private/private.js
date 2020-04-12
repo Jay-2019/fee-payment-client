@@ -1,15 +1,17 @@
 import React from 'react'
-import { StudentProfile, CourseFee } from '../../components/index';
+import { StudentProfile, CourseFee, BackFee, SignOut } from '../../components/index';
 import PrivateRoute from "./privateRoute";
 
 const privateRoutes = (props) => {
     const routes = [
-        { path: "/studentProfile", component: StudentProfile },
+        { path: "/studentProfile/:id", component: StudentProfile },
         // { path: "/myProfile", component: MyProfile },
-        { path: "/courseFee", component: CourseFee },
+        { path: "/courseFee/:id", component: CourseFee },
+        { path: "/backFee/:id", component: BackFee },
+        { path: "/signOut", component: SignOut },
     ];
     return routes.map((route, index) => {
-        return <PrivateRoute key={index} path={route.path} component={() => <route.component {...props} />} />
+        return <PrivateRoute key={index} path={route.path} component={(prop) => <route.component {...prop} />} />
     });
 }
 export default privateRoutes;

@@ -2,8 +2,8 @@ import React from "react";
 
 import Axios from "axios";
 import { useNavigationBar } from "../customHooks/index";
-import { useState } from "react";
-const fee = 56205;
+import { useState, useEffect } from "react";
+const fee = 56_205;
 const lateFeeFine = 2000;
 // (YYYY, MM, DD, Hr, Min, Sec) (India Standard Time)
 const firstYearDueDate = new Date(2020, 3, 7, 11, 45, 55);
@@ -13,6 +13,47 @@ const fourthYearDueDate = new Date(2019, 3, 7, 11, 45, 55);
 
 export default function CourseFee(props) {
   const navigationBar = useNavigationBar();
+  const [validFee, setValidFee] = useState(Array);
+  const [hideFirstYear, setHideFirstYear] = useState(false);
+  const [hideSecondYear, setHideSecondYear] = useState(false);
+  const [hideThirdYear, setHideThirdYear] = useState(false);
+  const [hideFourthYear, setHideFourthYear] = useState(false);
+  const hideOption = () => {
+    for (let data of validFee) {
+      switch (data) {
+        case "firstYear":
+          setHideFirstYear(true);
+          break;
+        case "secondYear":
+          setHideSecondYear(true);
+          break;
+        case "thirdYear":
+          setHideThirdYear(true);
+          break;
+        case "fourthYear":
+          setHideFourthYear(true);
+          break;
+        default:
+          return null;
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadCourseFeeYear();
+    hideOption();
+  });
+
+  const loadCourseFeeYear = () => {
+    Axios.get(
+      "http://localhost:4000/feePaymentDB/getCourseFeeYear/" +
+        props.match.params.id
+    )
+      .then(response => {
+        return setValidFee(response.data);
+      })
+      .catch(error => console.log(error.message));
+  };
 
   const [feeInfo, setFeeInfo] = useState({
     year: "",
@@ -20,6 +61,7 @@ export default function CourseFee(props) {
     lateFee: 0,
     totalFee: 0
   });
+  const [table, setTable] = useState(false);
 
   const showTable = (
     <div className="card-title">
@@ -47,11 +89,18 @@ export default function CourseFee(props) {
           </tr>
         </tbody>
       </table>
+      <div>
+        <br />
+        <button type="submit" className="btn btn-primary">
+          Pay Now{" "}
+        </button>
+      </div>
     </div>
   );
 
   const handleYearChange = e => {
     feeInfo.year = e.target.value;
+    setTable(true);
     calculateFee(feeInfo.year);
   };
 
@@ -94,15 +143,20 @@ export default function CourseFee(props) {
     e.preventDefault();
     if (feeInfo.year === "")
       return window.alert("please select valid year for fee payment");
-    console.log(feeInfo);
+    console.log(props.match.params.id);
     const value = {
       feeInfo: feeInfo
     };
-    Axios.post("http://localhost:4000/feePaymentDB/courseFeePayment", value)
+    Axios.post(
+      "http://localhost:4000/feePaymentDB/courseFeePayment/" +
+        props.match.params.id,
+      value
+    )
       .then(response => {
         return window.alert("fee submission successful");
       })
       .catch(error => console.log(error.message));
+    props.history.push("/courseFee/" + localStorage.getItem("token"));
   };
   return (
     <>
@@ -122,21 +176,32 @@ export default function CourseFee(props) {
                   onChange={handleYearChange}
                 >
                   <option hidden>Select Year...</option>
-                  <option value="firstYear">{`1st Year`} </option>
-                  <option value="secondYear">{`2nd Year`} </option>
-                  <option value="thirdYear">{`3rd Year`} </option>
-                  <option value="fourthYear">{`4th Year`} </option>
+                  {hideFirstYear ? (
+                    <option hidden>{`1st Year`}</option>
+                  ) : (
+                    <option value="firstYear">{`1st Year`} </option>
+                  )}
+
+                  {hideSecondYear ? (
+                    <option hidden>{`2nd Year`}</option>
+                  ) : (
+                    <option value="secondYear">{`2nd Year`} </option>
+                  )}
+                  {hideThirdYear ? (
+                    <option hidden>{`3rd Year`}</option>
+                  ) : (
+                    <option value="thirdYear">{`3rd Year`} </option>
+                  )}
+                  {hideFourthYear ? (
+                    <option hidden>{`4th Year`}</option>
+                  ) : (
+                    <option value="fourthYear">{`4th Year`} </option>
+                  )}
                 </select>
 
                 <div>
                   <br />
-                  {showTable}
-                </div>
-                <div>
-                  <br />
-                  <button type="submit" className="btn btn-primary">
-                    Pay Now{" "}
-                  </button>
+                  {table ? showTable : null}
                 </div>
               </div>
               <br />
