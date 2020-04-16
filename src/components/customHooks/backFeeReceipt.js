@@ -2,7 +2,7 @@ import React from "react";
 import style from "../../style/style.module.css";
 export default function useBackFeeReceipt(props) {
     const Card = (feeInfo) => (
-        <div className={`card border-success  text-center ${style.receiptWidth}`} >
+        <div className={`card border-warning  bg-secondary   text-center ${style.receiptWidth}`} >
             <div className="card-header">
                 <div className="card-title">
                     <h4>{new Date(feeInfo.feeInfo.createdAt).toLocaleDateString("en-GB")}</h4>

@@ -1,6 +1,7 @@
 import React from "react";
 // import { Redirect } from "react-router-dom";
 import Axios from "axios";
+import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
 const fee = 56_205;
@@ -30,33 +31,39 @@ export default function CourseFee(props) {
 
   const showTable = (
     <div className="card-title">
-      <table className="table table-striped table-dark">
-        <thead>
-          <tr>
+      <table className={`table table-striped table-dark ${style.tableText}`}>
+        <tbody>
+          <tr className="table-info">
             <th scope="col">
               <b>Course Fee</b>
             </th>
-            <td>{feeInfo.courseFee}.00 Rs</td>
+            <td>
+              <b>{feeInfo.courseFee}.00 Rs</b>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          <tr>
+
+          <tr className="table-warning">
             <th scope="row">
               <b>Late Fee</b>
             </th>
-            <td>{feeInfo.lateFee}.00 Rs</td>
+            <td>
+              <b>{feeInfo.lateFee}.00 Rs</b>
+            </td>
           </tr>
-          <tr>
+
+          <tr className="table-success">
             <th scope="row">
               <b>Total Amount</b>
             </th>
-            <td>{feeInfo.totalFee}.00 Rs</td>
+            <td>
+              <b>{feeInfo.totalFee}.00 Rs</b>
+            </td>
           </tr>
         </tbody>
       </table>
       <div>
         <br />
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn  btn-outline-warning">
           Pay Now{" "}
         </button>
       </div>
@@ -171,8 +178,8 @@ export default function CourseFee(props) {
         {navigationBar}
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card border-danger w-75 text-center">
-            <div className="card-header">
+          <div className="card border-warning bg-dark text-white w-75 text-center">
+            <div className={`card-header ${style.courseFeeTitle}`}>
               <h2>Course Fee</h2>
             </div>
             <div className="card-body">

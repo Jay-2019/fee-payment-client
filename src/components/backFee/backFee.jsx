@@ -1,5 +1,6 @@
 import React from "react";
 import Axios from "axios";
+import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState } from "react";
 import { subject } from "../constant";
@@ -18,33 +19,37 @@ export default function BackFee(props) {
 
   const showTable = (
     <div className="card-title">
-      <table className="table table-striped table-dark">
-        <thead>
-          <tr>
+      <table className={`table table-striped table-dark ${style.tableText}`}>
+        <tbody>
+          <tr className="table-info">
             <th scope="col">
               <b>Back Fee</b>
             </th>
-            <td>{feeInfo.backFee}.00 Rs</td>
+            <td>
+              <b>{feeInfo.backFee}.00 Rs</b>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          <tr>
+          <tr className="table-secondary">
             <th scope="row">
               <b>Late Fee</b>
             </th>
-            <td>{feeInfo.lateFee}.00 Rs</td>
+            <td>
+              <b>{feeInfo.lateFee}.00 Rs</b>
+            </td>
           </tr>
-          <tr>
+          <tr className="table-success">
             <th scope="row">
               <b>Total Amount</b>
             </th>
-            <td>{feeInfo.totalFee}.00 Rs</td>
+            <td>
+              <b>{feeInfo.totalFee}.00 Rs</b>
+            </td>
           </tr>
         </tbody>
       </table>
       <div>
         <br />
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn  btn-outline-danger">
           Pay Now{" "}
         </button>
       </div>
@@ -92,8 +97,8 @@ export default function BackFee(props) {
         {navigationBar}
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card border-info w-75 text-center">
-            <div className="card-header">
+          <div className="card border-danger bg-dark text-white w-75 text-center">
+            <div className={`card-header ${style.backFeeTitle}`}>
               <h2>Back Fee</h2>
             </div>
             <div className="card-body">

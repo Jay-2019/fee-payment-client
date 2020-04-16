@@ -6,3 +6,16 @@
 .receiptWidth {
   width: 600px;
 }
+
+.tableText {
+  color: #1d2124;
+  /* background-color: #343a40; */
+}
+
+.courseFeeTitle {
+  color: orange;
+}
+
+.backFeeTitle{
+  color: #dc3545;
+}
