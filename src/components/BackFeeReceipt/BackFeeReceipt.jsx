@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import { useNavigationBar, useFeeReceipt } from "../customHooks/index";
+import { useNavigationBar, useBackFeeReceipt } from "../customHooks/index";
 
 export default function BackFeeReceipt(props) {
   const navigationBar = useNavigationBar();
@@ -16,7 +16,7 @@ export default function BackFeeReceipt(props) {
       .catch(error => console.log(error.message));
   }, []);
 
-  const backFeeReceipt = useFeeReceipt({
+  const backFeeReceipt = useBackFeeReceipt({
     title: "Back Fee Receipt",
     fee: fee
   });

@@ -73,16 +73,16 @@ export default function CourseFee(props) {
     feeInfo.courseFee = fee;
 
     switch (year) {
-      case "firstYear":
+      case "First Year":
         feeInfo.lateFee = checkDueDate(firstYearDueDate);
         break;
-      case "secondYear":
+      case "Second Year":
         feeInfo.lateFee = checkDueDate(secondYearDueDate);
         break;
-      case "thirdYear":
+      case "Third Year":
         feeInfo.lateFee = checkDueDate(thirdYearDueDate);
         break;
-      case "fourthYear":
+      case "Fourth Year":
         feeInfo.lateFee = checkDueDate(fourthYearDueDate);
         break;
       default:
@@ -103,40 +103,6 @@ export default function CourseFee(props) {
     if (yearOfDueDate < Date.now()) return lateFeeFine;
     return 0;
   };
-
-  // const loadCourseFeeYear = () => {
-  //   Axios.get(
-  //     "http://localhost:4000/feePaymentDB/getCourseFeeYear/" +
-  //       localStorage.getItem("token")
-  //   )
-  //     .then(response => {
-  //       return setValidFee(response.data);
-  //     })
-  //     .catch(error => console.log(error.message));
-  // };
-
-  // const hideOption = () => {
-  //   for (let data of validFee) {
-  //     console.log(validFee);
-  //     switch (data) {
-  //       case "firstYear":
-  //         setHideFirstYear(true);
-  //         break;
-  //       case "secondYear":
-  //         setHideSecondYear(true);
-  //         break;
-  //       case "thirdYear":
-  //         setHideThirdYear(true);
-  //         break;
-  //       case "fourthYear":
-  //         setHideFourthYear(true);
-  //         break;
-  //       default:
-  //         return null;
-  //     }
-  //   }
-  // };
-  // hideOption();
 
   useEffect(() => {
     let source = Axios.CancelToken.source();
@@ -161,18 +127,17 @@ export default function CourseFee(props) {
   useEffect(() => {
     const hideOption = () => {
       for (let data of validFee) {
-        console.log(validFee);
         switch (data) {
-          case "firstYear":
+          case "First Year":
             setHideFirstYear(true);
             break;
-          case "secondYear":
+          case "Second Year":
             setHideSecondYear(true);
             break;
-          case "thirdYear":
+          case "Third Year":
             setHideThirdYear(true);
             break;
-          case "fourthYear":
+          case "Fourth Year":
             setHideFourthYear(true);
             break;
           default:
@@ -221,26 +186,24 @@ export default function CourseFee(props) {
                   {hideFirstYear ? (
                     <option hidden>{`1st Year`}</option>
                   ) : (
-                    <option value="firstYear">{`1st Year`} </option>
+                    <option value="First Year">{`1st Year`} </option>
                   )}
-
                   {hideSecondYear ? (
                     <option hidden>{`2nd Year`}</option>
                   ) : (
-                    <option value="secondYear">{`2nd Year`} </option>
+                    <option value="Second Year">{`2nd Year`} </option>
                   )}
                   {hideThirdYear ? (
                     <option hidden>{`3rd Year`}</option>
                   ) : (
-                    <option value="thirdYear">{`3rd Year`} </option>
+                    <option value="Third Year">{`3rd Year`} </option>
                   )}
                   {hideFourthYear ? (
                     <option hidden>{`4th Year`}</option>
                   ) : (
-                    <option value="fourthYear">{`4th Year`} </option>
+                    <option value="Fourth Year">{`4th Year`} </option>
                   )}
                 </select>
-
                 <div>
                   <br />
                   {table ? showTable : null}

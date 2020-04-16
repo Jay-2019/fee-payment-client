@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import { useNavigationBar, useFeeReceipt } from "../customHooks/index";
+import { useNavigationBar, useCourseFeeReceipt } from "../customHooks/index";
 
 // const title = "Course Fee Receipt";
 export default function CourseFeeReceipt(props) {
@@ -17,7 +17,7 @@ export default function CourseFeeReceipt(props) {
       .catch(error => console.log(error.message));
   }, []);
 
-  const courseFeeReceipt = useFeeReceipt({
+  const courseFeeReceipt = useCourseFeeReceipt({
     title: "Course Fee Receipt",
     fee: fee
   });

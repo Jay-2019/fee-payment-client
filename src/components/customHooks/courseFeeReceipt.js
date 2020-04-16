@@ -1,7 +1,6 @@
 import React from "react";
 import style from "../../style/style.module.css";
-export default function useFeeReceipt(props) {
-    // console.log(props.fee)
+export default function useCourseFeeReceipt(props) {
     const Card = (feeInfo) => (
         <div className={`card border-success  text-center ${style.receiptWidth}`} >
             <div className="card-header">
