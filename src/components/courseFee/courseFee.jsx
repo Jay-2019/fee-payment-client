@@ -1,5 +1,5 @@
 import React from "react";
-
+// import { Redirect } from "react-router-dom";
 import Axios from "axios";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
@@ -13,47 +13,6 @@ const fourthYearDueDate = new Date(2019, 3, 7, 11, 45, 55);
 
 export default function CourseFee(props) {
   const navigationBar = useNavigationBar();
-  const [validFee, setValidFee] = useState(Array);
-  const [hideFirstYear, setHideFirstYear] = useState(false);
-  const [hideSecondYear, setHideSecondYear] = useState(false);
-  const [hideThirdYear, setHideThirdYear] = useState(false);
-  const [hideFourthYear, setHideFourthYear] = useState(false);
-  const hideOption = () => {
-    for (let data of validFee) {
-      switch (data) {
-        case "firstYear":
-          setHideFirstYear(true);
-          break;
-        case "secondYear":
-          setHideSecondYear(true);
-          break;
-        case "thirdYear":
-          setHideThirdYear(true);
-          break;
-        case "fourthYear":
-          setHideFourthYear(true);
-          break;
-        default:
-          return null;
-      }
-    }
-  };
-
-  useEffect(() => {
-    loadCourseFeeYear();
-    hideOption();
-  });
-
-  const loadCourseFeeYear = () => {
-    Axios.get(
-      "http://localhost:4000/feePaymentDB/getCourseFeeYear/" +
-        props.match.params.id
-    )
-      .then(response => {
-        return setValidFee(response.data);
-      })
-      .catch(error => console.log(error.message));
-  };
 
   const [feeInfo, setFeeInfo] = useState({
     year: "",
@@ -62,6 +21,12 @@ export default function CourseFee(props) {
     totalFee: 0
   });
   const [table, setTable] = useState(false);
+
+  const [validFee, setValidFee] = useState(Array);
+  const [hideFirstYear, setHideFirstYear] = useState(false);
+  const [hideSecondYear, setHideSecondYear] = useState(false);
+  const [hideThirdYear, setHideThirdYear] = useState(false);
+  const [hideFourthYear, setHideFourthYear] = useState(false);
 
   const showTable = (
     <div className="card-title">
@@ -123,7 +88,7 @@ export default function CourseFee(props) {
       default:
         return null;
     }
-
+    //calculate totalFee
     feeInfo.totalFee = feeInfo.courseFee + feeInfo.lateFee;
 
     setFeeInfo({
@@ -139,18 +104,94 @@ export default function CourseFee(props) {
     return 0;
   };
 
+  // const loadCourseFeeYear = () => {
+  //   Axios.get(
+  //     "http://localhost:4000/feePaymentDB/getCourseFeeYear/" +
+  //       localStorage.getItem("token")
+  //   )
+  //     .then(response => {
+  //       return setValidFee(response.data);
+  //     })
+  //     .catch(error => console.log(error.message));
+  // };
+
+  // const hideOption = () => {
+  //   for (let data of validFee) {
+  //     console.log(validFee);
+  //     switch (data) {
+  //       case "firstYear":
+  //         setHideFirstYear(true);
+  //         break;
+  //       case "secondYear":
+  //         setHideSecondYear(true);
+  //         break;
+  //       case "thirdYear":
+  //         setHideThirdYear(true);
+  //         break;
+  //       case "fourthYear":
+  //         setHideFourthYear(true);
+  //         break;
+  //       default:
+  //         return null;
+  //     }
+  //   }
+  // };
+  // hideOption();
+
+  useEffect(() => {
+    let source = Axios.CancelToken.source();
+
+    Axios.get(
+      "http://localhost:4000/feePaymentDB/getCourseFeeYear/" +
+        localStorage.getItem("token"),
+      {
+        cancelToken: source.token
+      }
+    )
+      .then(response => {
+        return setValidFee(response.data);
+      })
+      .catch(error => console.log(error.message));
+
+    return () => {
+      source.cancel("Cancelling in cleanup");
+    };
+  }, [hideFirstYear, hideSecondYear, hideThirdYear, hideFourthYear]);
+
+  useEffect(() => {
+    const hideOption = () => {
+      for (let data of validFee) {
+        console.log(validFee);
+        switch (data) {
+          case "firstYear":
+            setHideFirstYear(true);
+            break;
+          case "secondYear":
+            setHideSecondYear(true);
+            break;
+          case "thirdYear":
+            setHideThirdYear(true);
+            break;
+          case "fourthYear":
+            setHideFourthYear(true);
+            break;
+          default:
+            return null;
+        }
+      }
+    };
+    hideOption();
+  });
+
   const handleSubmit = e => {
     e.preventDefault();
     if (feeInfo.year === "")
       return window.alert("please select valid year for fee payment");
-    console.log(props.match.params.id);
-    const value = {
-      feeInfo: feeInfo
-    };
+
     Axios.post(
       "http://localhost:4000/feePaymentDB/courseFeePayment/" +
         props.match.params.id,
-      value
+      feeInfo
     )
       .then(response => {
         return window.alert("fee submission successful");
@@ -158,13 +199,14 @@ export default function CourseFee(props) {
       .catch(error => console.log(error.message));
     props.history.push("/courseFee/" + localStorage.getItem("token"));
   };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
         {navigationBar}
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card w-75 text-center">
+          <div className="card border-danger w-75 text-center">
             <div className="card-header">
               <h2>Course Fee</h2>
             </div>

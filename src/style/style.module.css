@@ -1,5 +1,8 @@
 .fontStyle {
-    color: red !important;
-    font-size: 100px;
-  }
-  
+  color: red !important;
+  font-size: 100px;
+}
+
+.receiptWidth {
+  width: 600px;
+}

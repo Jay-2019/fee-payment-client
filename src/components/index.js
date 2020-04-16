@@ -4,4 +4,6 @@ import StudentProfile from "./studentProfile/index";
 import CourseFee from "./courseFee/index";
 import BackFee from "./backFee/index";
 import SignOut from "./signOut/signOut";
-export { StudentSignUp, StudentSignIn, StudentProfile, CourseFee, BackFee, SignOut };
+import CourseFeeReceipt from "./CourseFeeReceipt/index";
+import BackFeeReceipt from "./BackFeeReceipt/index";
+export { StudentSignUp, StudentSignIn, StudentProfile, CourseFee, BackFee, SignOut, CourseFeeReceipt, BackFeeReceipt };

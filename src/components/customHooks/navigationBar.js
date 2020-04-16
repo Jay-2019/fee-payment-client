@@ -25,8 +25,11 @@ export default function useNavigationBar() {
                         <Link className="nav-item nav-link " to={"/backFee/" + localStorage.getItem("token")} >
                             Back Fee
                               </Link>
-                        <Link className="nav-item nav-link " to={"/feeReceipts/" + localStorage.getItem("token")} >
-                            Fee Receipt
+                        <Link className="nav-item nav-link " to={"/courseFeeReceipt/" + localStorage.getItem("token")} >
+                            Course Fee Receipt
+                        </Link>
+                        <Link className="nav-item nav-link " to={"/backFeeReceipt/" + localStorage.getItem("token")} >
+                            Back Fee Receipt
                         </Link>
                         <Link className="nav-item nav-link " to={"/signOut"} >
                             Sign Out

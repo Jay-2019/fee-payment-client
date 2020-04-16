@@ -1,5 +1,4 @@
 import React from "react";
-
 import Axios from "axios";
 import { useNavigationBar } from "../customHooks/index";
 import { useState } from "react";
@@ -76,13 +75,11 @@ export default function BackFee(props) {
     if (feeInfo.subject === "")
       return window.alert("please select valid year for fee payment");
     console.log(feeInfo);
-    const value = {
-      feeInfo: feeInfo
-    };
+
     Axios.post(
       "http://localhost:4000/feePaymentDB/backFeePayment/" +
         props.match.params.id,
-      value
+      feeInfo
     )
       .then(response => {
         return window.alert("fee submission successful");
@@ -95,7 +92,7 @@ export default function BackFee(props) {
         {navigationBar}
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card w-75 text-center">
+          <div className="card border-info w-75 text-center">
             <div className="card-header">
               <h2>Back Fee</h2>
             </div>
