@@ -2,7 +2,7 @@ import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
-// import {history} from "react-router-dom";
+
 
 export default function studentSignUp(props) {
   return (

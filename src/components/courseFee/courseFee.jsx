@@ -6,15 +6,18 @@ import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
 const fee = 56_205;
 const lateFeeFine = 2000;
-// (YYYY, MM, DD, Hr, Min, Sec) (India Standard Time)
-const firstYearDueDate = new Date(2020, 3, 7, 11, 45, 55);
-const secondYearDueDate = new Date(2021, 3, 7, 11, 45, 55);
-const thirdYearDueDate = new Date(2022, 3, 7, 11, 45, 55);
-const fourthYearDueDate = new Date(2019, 3, 7, 11, 45, 55);
 
 export default function CourseFee(props) {
   const navigationBar = useNavigationBar();
+  const [dueDate, setDueDate] = useState({
+    firstYear: "",
+    secondYear: "",
+    thirdYear: "",
+    fourthYear: ""
+  });
 
+  console.log(new Date().toLocaleString("en-GB"));
+  console.log(dueDate.firstYear);
   const [feeInfo, setFeeInfo] = useState({
     year: "",
     courseFee: 0,
@@ -81,16 +84,16 @@ export default function CourseFee(props) {
 
     switch (year) {
       case "First Year":
-        feeInfo.lateFee = checkDueDate(firstYearDueDate);
+        feeInfo.lateFee = checkDueDate(dueDate.firstYear);
         break;
       case "Second Year":
-        feeInfo.lateFee = checkDueDate(secondYearDueDate);
+        feeInfo.lateFee = checkDueDate(dueDate.secondYear);
         break;
       case "Third Year":
-        feeInfo.lateFee = checkDueDate(thirdYearDueDate);
+        feeInfo.lateFee = checkDueDate(dueDate.thirdYear);
         break;
       case "Fourth Year":
-        feeInfo.lateFee = checkDueDate(fourthYearDueDate);
+        feeInfo.lateFee = checkDueDate(dueDate.fourthYear);
         break;
       default:
         return null;
@@ -107,9 +110,28 @@ export default function CourseFee(props) {
   };
 
   const checkDueDate = yearOfDueDate => {
-    if (yearOfDueDate < Date.now()) return lateFeeFine;
+    if (yearOfDueDate < new Date().toLocaleString("en-GB")) return lateFeeFine;
     return 0;
   };
+
+  // get Due Date
+  useEffect(() => {
+    Axios.get(
+      "http://localhost:4000/feePaymentDB/getCourseFeeDueDate/" +
+        "5ebe659d096ddc0390a8e8ae"
+    )
+      .then(response => {
+        return setDueDate({
+          firstYear: new Date(response.data.firstYear).toLocaleString("en-GB"),
+          secondYear: new Date(response.data.secondYear).toLocaleString(
+            "en-GB"
+          ),
+          thirdYear: new Date(response.data.thirdYear).toLocaleString("en-GB"),
+          fourthYear: new Date(response.data.fourthYear).toLocaleString("en-GB")
+        });
+      })
+      .catch(error => console.log(error.message));
+  }, []);
 
   useEffect(() => {
     let source = Axios.CancelToken.source();

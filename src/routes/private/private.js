@@ -5,7 +5,7 @@ import PrivateRoute from "./privateRoute";
 const privateRoutes = (props) => {
     const routes = [
         { path: "/studentProfile/:id", component: StudentProfile },
-        // { path: "/myProfile", component: MyProfile },
+        { path: "/myProfile/:id", component: StudentProfile },
         { path: "/courseFeeReceipt/:id", component: CourseFeeReceipt },
         { path: "/backFeeReceipt/:id", component: BackFeeReceipt },
         { path: "/courseFee/:id", component: CourseFee },
