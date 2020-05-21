@@ -4,13 +4,17 @@ import Axios from "axios";
 import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
-const fee = 56_205;
-const lateFeeFine = 2000;
+// const fee = 56_205;
+// const lateFeeFine = 2000;
+const courseFeeDueDateId = "5ec0ec3d70f1cc05e0d9f6d8";
 
 export default function CourseFee(props) {
+  const [idOfSelectedYear, setIdOfSelectedYear] = useState("");
+  const [table, setTable] = useState(false);
+
   const navigationBar = useNavigationBar();
-  // const [initialFee, setInitialFee] = useState({ fee: 0, lateFeeFine: 0 });
-  // const [lateFeeFine, setLateFeeFine] = useState();
+  const [fee, setFee] = useState();
+  const [lateFeeFine, setLateFeeFine] = useState();
   const [dueDate, setDueDate] = useState({
     firstYear: "",
     secondYear: "",
@@ -25,10 +29,7 @@ export default function CourseFee(props) {
     totalFee: 0
   });
 
-  const [idOfSelectedYear, setIdOfSelectedYear] = useState("");
-  const [table, setTable] = useState(false);
-
-  const [validFee, setValidFee] = useState(Array);
+  // const [validFee, setValidFee] = useState(Array);
   const [hideFirstYear, setHideFirstYear] = useState(false);
   const [hideSecondYear, setHideSecondYear] = useState(false);
   const [hideThirdYear, setHideThirdYear] = useState(false);
@@ -74,158 +75,131 @@ export default function CourseFee(props) {
       </div>
     </div>
   );
+
   //map selected year of feeType with Id
-  const mapSelectedYearWithId = async year => {
-    let id;
+  const mapSelectedYearWithId = year => {
+    let idOfSelectedYear;
     switch (year) {
       case "First Year":
-        id = "5ec13f8678ea5a2e0c1a6bfe";
+        idOfSelectedYear = "5ec13f8678ea5a2e0c1a6bfe";
         break;
       case "Second Year":
-        id = "5ec13ffc78ea5a2e0c1a6bff";
+        idOfSelectedYear = "5ec13ffc78ea5a2e0c1a6bff";
         break;
       case "Third Year":
-        id = "5ec1401078ea5a2e0c1a6c00";
+        idOfSelectedYear = "5ec1401078ea5a2e0c1a6c00";
         break;
       case "Fourth Year":
-        id = "5ec1402178ea5a2e0c1a6c01";
+        idOfSelectedYear = "5ec1402178ea5a2e0c1a6c01";
         break;
       default:
         return null;
     }
-    return setIdOfSelectedYear(id);
+    return setIdOfSelectedYear(idOfSelectedYear);
   };
 
-  const handleYearChange = async e => {
-    setTable(false);
-    feeInfo.year = e.target.value;
-    await mapSelectedYearWithId(e.target.value);
-    await calculateFee(feeInfo.year);
-  };
-
-  const calculateFee = async year => {
-    feeInfo.courseFee = fee;
-
-    switch (year) {
-      case "First Year":
-        feeInfo.lateFee = await checkDueDate(dueDate.firstYear);
-        break;
-      case "Second Year":
-        feeInfo.lateFee = await checkDueDate(dueDate.secondYear);
-        break;
-      case "Third Year":
-        feeInfo.lateFee = await checkDueDate(dueDate.thirdYear);
-        break;
-      case "Fourth Year":
-        feeInfo.lateFee = await checkDueDate(dueDate.fourthYear);
-        break;
-      default:
-        return null;
-    }
-    //calculate totalFee
-    feeInfo.totalFee = feeInfo.courseFee + feeInfo.lateFee;
-
-    setFeeInfo({
-      year: feeInfo.year,
-      courseFee: feeInfo.courseFee,
-      lateFee: feeInfo.lateFee,
-      totalFee: feeInfo.totalFee
-    });
-    setTable(true);
-  };
-
-  const checkDueDate = async yearOfDueDate => {
+  const checkDueDate = yearOfDueDate => {
     if (yearOfDueDate < new Date().toLocaleString("en-GB")) {
       return lateFeeFine;
     }
     return 0;
   };
 
-  // get Due Date
-  useEffect(() => {
-    Axios.get(
-      "http://localhost:4000/feePaymentDB/getCourseFeeDueDate/" +
-        "5ec0ec3d70f1cc05e0d9f6d8"
-    )
-      .then(response => {
-        return setDueDate({
-          firstYear: new Date(response.data.firstYear).toLocaleString("en-GB"),
-          secondYear: new Date(response.data.secondYear).toLocaleString(
-            "en-GB"
-          ),
-          thirdYear: new Date(response.data.thirdYear).toLocaleString("en-GB"),
-          fourthYear: new Date(response.data.fourthYear).toLocaleString("en-GB")
-        });
-      })
-      .catch(error => console.log(error.message));
-  }, []);
+  const calculateFee = year => {
+    feeInfo.courseFee = fee;
+    switch (year) {
+      case "First Year":
+        feeInfo.lateFee = checkDueDate(dueDate.firstYear);
+        break;
+      case "Second Year":
+        feeInfo.lateFee = checkDueDate(dueDate.secondYear);
+        break;
+      case "Third Year":
+        feeInfo.lateFee = checkDueDate(dueDate.thirdYear);
+        break;
+      case "Fourth Year":
+        feeInfo.lateFee = checkDueDate(dueDate.fourthYear);
+        break;
+      default:
+        return null;
+    }
 
-  //get year of fee is already submitted
+    if (feeInfo.courseFee && feeInfo.lateFee) {
+      feeInfo.totalFee = feeInfo.courseFee + feeInfo.lateFee;
+      setFeeInfo({
+        year: feeInfo.year,
+        courseFee: feeInfo.courseFee,
+        lateFee: feeInfo.lateFee,
+        totalFee: feeInfo.totalFee
+      });
+    }
+    return setTable(true);
+  };
+
+  const handleYearChange = async e => {
+    setTable(false);
+    feeInfo.year = e.target.value;
+    mapSelectedYearWithId(e.target.value);
+    calculateFee(e.target.value);
+  };
+
+  const hideOption = validFee => {
+    for (let data of validFee) {
+      switch (data) {
+        case "First Year":
+          setHideFirstYear(true);
+          break;
+        case "Second Year":
+          setHideSecondYear(true);
+          break;
+        case "Third Year":
+          setHideThirdYear(true);
+          break;
+        case "Fourth Year":
+          setHideFourthYear(true);
+          break;
+        default:
+          return null;
+      }
+    }
+  };
+
   useEffect(() => {
     let source = Axios.CancelToken.source();
-
-    Axios.get(
-      "http://localhost:4000/feePaymentDB/getCourseFeeYear/" +
-        localStorage.getItem("token"),
-      {
-        cancelToken: source.token
-      }
-    )
-      .then(response => {
-        return setValidFee(response.data);
-      })
-      .catch(error => console.log(error.message));
-
+    const fetchData = async () => {
+      const [dueDate, validFee] = await Promise.all([
+        Axios.get(
+          `http://localhost:4000/feePaymentDB/getCourseFeeDueDate/${courseFeeDueDateId}`
+        ),
+        //get year of fee is already submitted
+        Axios.get(
+          `http://localhost:4000/feePaymentDB/getCourseFeeYear/${localStorage.getItem(
+            "token"
+          )}`
+        )
+      ]);
+      setDueDate(dueDate.data);
+      hideOption(validFee.data);
+    };
+    fetchData();
     return () => {
       source.cancel("Cancelling in cleanup");
     };
   }, [hideFirstYear, hideSecondYear, hideThirdYear, hideFourthYear]);
 
-  useEffect(() => {
-    const hideOption = () => {
-      for (let data of validFee) {
-        switch (data) {
-          case "First Year":
-            setHideFirstYear(true);
-            break;
-          case "Second Year":
-            setHideSecondYear(true);
-            break;
-          case "Third Year":
-            setHideThirdYear(true);
-            break;
-          case "Fourth Year":
-            setHideFourthYear(true);
-            break;
-          default:
-            return null;
-        }
-      }
-    };
-    hideOption();
-  });
-
-  //get selected year of courseFee
+  // get selected year of courseFee-Type
   useEffect(() => {
     let source = Axios.CancelToken.source();
-
     Axios.get(
-      "http://localhost:4000/feePaymentDB/getCourseFeeType/" + idOfSelectedYear,
+      `http://localhost:4000/feePaymentDB/getCourseFeeType/${idOfSelectedYear}`,
       {
         cancelToken: source.token
       }
     )
       .then(response => {
         const { totalFee, delayFee } = response.data;
-        // return setInitialFee({
-        //   totalFee: totalFee,
-        //   lateFeeFine: delayFee
-        // });
-        // console.log(year, totalFee, delayFee);
-        //   console.log(delayFee);
-        //   setFeeInfo({
-        //     courseFee: totalFee
-        //   });
+        setLateFeeFine(delayFee);
+        setFee(totalFee);
         return console.log(totalFee, delayFee);
       })
       .catch(error => console.log(error.message));
