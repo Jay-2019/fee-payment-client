@@ -4,17 +4,11 @@ import Axios from "axios";
 import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
-// const fee = 56_205;
-// const lateFeeFine = 2000;
+
 const courseFeeDueDateId = "5ec0ec3d70f1cc05e0d9f6d8";
 
 export default function CourseFee(props) {
-  const [idOfSelectedYear, setIdOfSelectedYear] = useState("");
-  const [table, setTable] = useState(false);
-
   const navigationBar = useNavigationBar();
-  const [fee, setFee] = useState();
-  const [lateFeeFine, setLateFeeFine] = useState();
   const [dueDate, setDueDate] = useState({
     firstYear: "",
     secondYear: "",
@@ -22,6 +16,10 @@ export default function CourseFee(props) {
     fourthYear: ""
   });
 
+  const [table, setTable] = useState(false);
+  const [idOfSelectedYear, setIdOfSelectedYear] = useState("");
+  const [fee, setFee] = useState(0);
+  const [lateFeeFine, setLateFeeFine] = useState(0);
   const [feeInfo, setFeeInfo] = useState({
     year: "",
     courseFee: 0,
@@ -29,7 +27,6 @@ export default function CourseFee(props) {
     totalFee: 0
   });
 
-  // const [validFee, setValidFee] = useState(Array);
   const [hideFirstYear, setHideFirstYear] = useState(false);
   const [hideSecondYear, setHideSecondYear] = useState(false);
   const [hideThirdYear, setHideThirdYear] = useState(false);
@@ -95,7 +92,7 @@ export default function CourseFee(props) {
       default:
         return null;
     }
-    return setIdOfSelectedYear(idOfSelectedYear);
+    setIdOfSelectedYear(idOfSelectedYear);
   };
 
   const checkDueDate = yearOfDueDate => {
@@ -105,42 +102,41 @@ export default function CourseFee(props) {
     return 0;
   };
 
-  const calculateFee = year => {
+  const calculateFee = idOfSelectedYear => {
     feeInfo.courseFee = fee;
-    switch (year) {
-      case "First Year":
+    switch (idOfSelectedYear) {
+      case "5ec13f8678ea5a2e0c1a6bfe":
         feeInfo.lateFee = checkDueDate(dueDate.firstYear);
         break;
-      case "Second Year":
+      case "5ec13ffc78ea5a2e0c1a6bff":
         feeInfo.lateFee = checkDueDate(dueDate.secondYear);
         break;
-      case "Third Year":
+      case "5ec1401078ea5a2e0c1a6c00":
         feeInfo.lateFee = checkDueDate(dueDate.thirdYear);
         break;
-      case "Fourth Year":
+      case "5ec1402178ea5a2e0c1a6c01":
         feeInfo.lateFee = checkDueDate(dueDate.fourthYear);
         break;
       default:
         return null;
     }
 
-    if (feeInfo.courseFee && feeInfo.lateFee) {
-      feeInfo.totalFee = feeInfo.courseFee + feeInfo.lateFee;
+    if (fee && lateFeeFine) {
       setFeeInfo({
         year: feeInfo.year,
         courseFee: feeInfo.courseFee,
         lateFee: feeInfo.lateFee,
-        totalFee: feeInfo.totalFee
+        totalFee: fee + feeInfo.lateFee
       });
     }
     return setTable(true);
   };
-
+  
   const handleYearChange = async e => {
     setTable(false);
     feeInfo.year = e.target.value;
     mapSelectedYearWithId(e.target.value);
-    calculateFee(e.target.value);
+    calculateFee(idOfSelectedYear);
   };
 
   const hideOption = validFee => {
@@ -199,8 +195,7 @@ export default function CourseFee(props) {
       .then(response => {
         const { totalFee, delayFee } = response.data;
         setLateFeeFine(delayFee);
-        setFee(totalFee);
-        return console.log(totalFee, delayFee);
+        return setFee(totalFee);
       })
       .catch(error => console.log(error.message));
 
@@ -208,6 +203,15 @@ export default function CourseFee(props) {
       source.cancel("Cancelling in cleanup");
     };
   }, [idOfSelectedYear]);
+
+  useEffect(() => {
+    let source = Axios.CancelToken.source();
+
+    calculateFee(idOfSelectedYear);
+    return () => {
+      source.cancel("Cancelling in cleanup");
+    };
+  }, [fee, lateFeeFine]);
 
   const handleSubmit = e => {
     e.preventDefault();
