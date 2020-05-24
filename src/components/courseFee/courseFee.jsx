@@ -136,7 +136,6 @@ export default function CourseFee(props) {
     setTable(false);
     feeInfo.year = e.target.value;
     mapSelectedYearWithId(e.target.value);
-    calculateFee(idOfSelectedYear);
   };
 
   const hideOption = validFee => {

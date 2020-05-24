@@ -4,7 +4,7 @@ import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
 import { arrayOfSemester, arrayOfBranch } from "../constant";
-const fee = 350;
+
 const idOfBackFeeType = "5ec376a132e3ab0f689a9d34";
 const idOfBackFeeDueDate = "5ec3822919bba72e54e8651d";
 export default function BackFee(props) {
@@ -78,34 +78,65 @@ export default function BackFee(props) {
     </div>
   );
 
-  const calculateFee = subject => {
-    feeInfo.backFee = fee;
+  const checkDueDate = dueDateOfSemester => {
+    if (dueDateOfSemester < new Date().toLocaleString("en-GB")) {
+      return backFeeType.delayFee;
+    }
+    return 0;
+  };
 
-    feeInfo.totalFee = feeInfo.backFee + feeInfo.lateFee;
+  const calculateFee = semester => {
+    switch (semester) {
+      case "First Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.firstSemester);
+        break;
+      case "Second Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.secondSemester);
+        break;
+      case "Third Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.thirdSemester);
+        break;
+      case "Fourth Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.fourthSemester);
+        break;
+      case "Fifth Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.fifthSemester);
+        break;
+      case "Sixth Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.sixthSemester);
+        break;
+      case "Seventh Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.seventhSemester);
+        break;
+      case "Eighth Semester":
+        feeInfo.lateFee = checkDueDate(dueDate.eighthSemester);
+        break;
+      default:
+        return null;
+    }
 
-    setFeeInfo({
-      subject: feeInfo.subject,
-      backFee: feeInfo.backFee,
-      lateFee: feeInfo.lateFee,
-      totalFee: feeInfo.totalFee
-    });
+    if (backFeeType.backPaper) {
+      feeInfo.totalFee = feeInfo.lateFee + backFeeType.backPaper;
+      setFeeInfo({
+        subject: feeInfo.subject,
+        backFee: backFeeType.backPaper,
+        lateFee: feeInfo.lateFee,
+        totalFee: feeInfo.totalFee
+      });
+      setTable(true);
+    }
   };
 
   const handleSemesterChange = e => {
     setSemester(e.target.value);
-    // setTable(false);
-    // calculateFee(feeInfo.subject);
   };
   const handleBranchChange = e => {
     setBranch(e.target.value);
-    // setTable(true);
-    // calculateFee(feeInfo.subject);
   };
   const handleSubjectChange = e => {
     feeInfo.subject = e.target.value;
-    // setTable(true);
-    // calculateFee(feeInfo.subject);
   };
+
   const displaySubject = () => {
     return (
       <>
@@ -113,6 +144,7 @@ export default function BackFee(props) {
           name="branch"
           className="custom-select"
           onChange={handleSubjectChange}
+          required
         >
           <option hidden>Select Subject...</option>
           {subject.map((subjectName, index) => (
@@ -166,10 +198,11 @@ export default function BackFee(props) {
       });
     };
     fetchData();
+
     return () => {
       source.cancel("Cancelling in cleanup");
     };
-  }, []);
+  }, [semester, branch]);
 
   useEffect(() => {
     Axios.get(
@@ -179,10 +212,14 @@ export default function BackFee(props) {
       .catch(error => console.log(error.message));
   }, [semester, branch]);
 
+  useEffect(() => {
+    calculateFee(semester);
+  }, [semester]);
+
   const handleSubmit = e => {
     e.preventDefault();
-    if (feeInfo.subject === "")
-      return window.alert("please select valid year for fee payment");
+    if (!(semester && branch && feeInfo.subject))
+      return window.alert("please select valid information");
     console.log(feeInfo);
 
     Axios.post(
@@ -195,6 +232,7 @@ export default function BackFee(props) {
       })
       .catch(error => console.log(error.message));
   };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -211,6 +249,7 @@ export default function BackFee(props) {
                   name="semester"
                   className="custom-select"
                   onChange={handleSemesterChange}
+                  required
                 >
                   <option hidden>Select Semester...</option>
                   {arrayOfSemester.map((semester, index) => (
@@ -224,6 +263,7 @@ export default function BackFee(props) {
                   name="branch"
                   className="custom-select"
                   onChange={handleBranchChange}
+                  required
                 >
                   <option hidden>Select Branch...</option>
                   {arrayOfBranch.map((branch, index) => (
