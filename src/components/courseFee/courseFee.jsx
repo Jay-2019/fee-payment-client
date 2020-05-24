@@ -131,7 +131,7 @@ export default function CourseFee(props) {
     }
     return setTable(true);
   };
-  
+
   const handleYearChange = async e => {
     setTable(false);
     feeInfo.year = e.target.value;
@@ -174,7 +174,13 @@ export default function CourseFee(props) {
           )}`
         )
       ]);
-      setDueDate(dueDate.data);
+      const { firstYear, secondYear, thirdYear, fourthYear } = dueDate.data;
+      setDueDate({
+        firstYear: new Date(firstYear).toLocaleString("en-GB"),
+        secondYear: new Date(secondYear).toLocaleString("en-GB"),
+        thirdYear: new Date(thirdYear).toLocaleString("en-GB"),
+        fourthYear: new Date(fourthYear).toLocaleString("en-GB")
+      });
       hideOption(validFee.data);
     };
     fetchData();
