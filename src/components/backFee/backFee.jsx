@@ -1,5 +1,7 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import Axios from "axios";
+import Multiselect from "react-widgets/lib/Multiselect";
+import "react-widgets/dist/css/react-widgets.css";
 import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
@@ -27,7 +29,7 @@ export default function BackFee(props) {
     eighthSemester: ""
   });
   const [feeInfo, setFeeInfo] = useState({
-    subject: "",
+    subject: [],
     semester: "",
     branch: "",
     backFee: 0,
@@ -37,6 +39,7 @@ export default function BackFee(props) {
   const [semester, setSemester] = useState("");
   const [branch, setBranch] = useState("");
   const [subject, setSubject] = useState([]);
+  const [selectSubject, setSelectSubject] = useState([]);
   const [table, setTable] = useState(false);
 
   const showTable = (
@@ -48,7 +51,7 @@ export default function BackFee(props) {
               <b>Back Fee</b>
             </th>
             <td>
-              <b>{feeInfo.backFee}.00 Rs</b>
+              <b>{feeInfo.backFee} Rs</b>
             </td>
           </tr>
           <tr className="table-secondary">
@@ -56,7 +59,7 @@ export default function BackFee(props) {
               <b>Late Fee</b>
             </th>
             <td>
-              <b>{feeInfo.lateFee}.00 Rs</b>
+              <b>{feeInfo.lateFee}Rs</b>
             </td>
           </tr>
           <tr className="table-success">
@@ -64,7 +67,7 @@ export default function BackFee(props) {
               <b>Total Amount</b>
             </th>
             <td>
-              <b>{feeInfo.totalFee}.00 Rs</b>
+              <b>{feeInfo.totalFee} Rs</b>
             </td>
           </tr>
         </tbody>
@@ -116,12 +119,13 @@ export default function BackFee(props) {
     }
 
     if (backFeeType.backPaper) {
-      feeInfo.totalFee = feeInfo.lateFee + backFeeType.backPaper;
+      feeInfo.totalFee =
+        backFeeType.backPaper * selectSubject.length + feeInfo.lateFee;
       setFeeInfo({
-        subject: feeInfo.subject,
-        backFee: backFeeType.backPaper,
-        lateFee: feeInfo.lateFee,
-        totalFee: feeInfo.totalFee
+        subject: selectSubject,
+        backFee: (backFeeType.backPaper * selectSubject.length).toFixed(2),
+        lateFee: feeInfo.lateFee.toFixed(2),
+        totalFee: feeInfo.totalFee.toFixed(2)
       });
       setTable(true);
     }
@@ -132,30 +136,6 @@ export default function BackFee(props) {
   };
   const handleBranchChange = e => {
     setBranch(e.target.value);
-  };
-  const handleSubjectChange = e => {
-    feeInfo.subject = e.target.value;
-  };
-
-  const displaySubject = () => {
-    return (
-      <>
-        <select
-          name="branch"
-          className="custom-select"
-          onChange={handleSubjectChange}
-          required
-        >
-          <option hidden>Select Subject...</option>
-          {subject.map((subjectName, index) => (
-            <option key={index} value={subjectName}>
-              {subjectName}
-            </option>
-          ))}
-        </select>
-        <hr />
-      </>
-    );
   };
 
   useEffect(() => {
@@ -202,19 +182,21 @@ export default function BackFee(props) {
     return () => {
       source.cancel("Cancelling in cleanup");
     };
-  }, [semester, branch]);
+  }, []);
 
   useEffect(() => {
     Axios.get(
       `http://localhost:4000/feePaymentDB/getSubject/${semester}/${branch}`
     )
-      .then(response => setSubject(response.data))
+      .then(response => {
+        setSubject(response.data);
+      })
       .catch(error => console.log(error.message));
   }, [semester, branch]);
 
   useEffect(() => {
     calculateFee(semester);
-  }, [semester]);
+  }, [selectSubject]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -234,7 +216,7 @@ export default function BackFee(props) {
   };
 
   return (
-    <>
+    <StrictMode>
       <form onSubmit={handleSubmit}>
         {navigationBar}
         <br />
@@ -273,11 +255,15 @@ export default function BackFee(props) {
                   ))}
                 </select>
                 <hr />
-                {displaySubject()}
-                <div>
-                  <br />
-                  {table ? showTable : null}
-                </div>
+                <Multiselect
+                  busy
+                  data={subject}
+                  autoFocus={false}
+                  onChange={value => setSelectSubject(value)}
+                  placeholder="Select one or more Subjects"
+                />
+                <br /> <br /> <br />
+                <div>{table ? showTable : null}</div>
               </div>
               <br />
               <div className="card-footer text-muted">
@@ -287,6 +273,6 @@ export default function BackFee(props) {
           </div>
         </div>
       </form>
-    </>
+    </StrictMode>
   );
 }
