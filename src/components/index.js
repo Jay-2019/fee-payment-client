@@ -1,9 +1,9 @@
-import StudentSignUp from "./studentSignUp/index";
-import StudentSignIn from "./studentSignIn/index";
-import StudentProfile from "./studentProfile/index";
-import CourseFee from "./courseFee/index";
-import BackFee from "./backFee/index";
+import StudentSignUp from "./studentSignUp/studentSignUp";
+import StudentSignIn from "./studentSignIn/studentSignIn";
+import StudentProfile from "./studentProfile/studentProfile";
+import CourseFee from "./courseFee/courseFee";
+import BackFee from "./backFee/backFee";
 import SignOut from "./signOut/signOut";
-import CourseFeeReceipt from "./CourseFeeReceipt/index";
-import BackFeeReceipt from "./BackFeeReceipt/index";
+import CourseFeeReceipt from "./CourseFeeReceipt/courseFeeReceipt";
+import BackFeeReceipt from "./BackFeeReceipt/BackFeeReceipt";
 export { StudentSignUp, StudentSignIn, StudentProfile, CourseFee, BackFee, SignOut, CourseFeeReceipt, BackFeeReceipt };
