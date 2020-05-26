@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React from "react";
 import Axios from "axios";
 import Multiselect from "react-widgets/lib/Multiselect";
 import "react-widgets/dist/css/react-widgets.css";
@@ -216,7 +216,7 @@ export default function BackFee(props) {
   };
 
   return (
-    <StrictMode>
+    <>
       <form onSubmit={handleSubmit}>
         {navigationBar}
         <br />
@@ -273,6 +273,6 @@ export default function BackFee(props) {
           </div>
         </div>
       </form>
-    </StrictMode>
+    </>
   );
 }
