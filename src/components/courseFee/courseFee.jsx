@@ -165,13 +165,17 @@ export default function CourseFee(props) {
     const fetchData = async () => {
       const [dueDate, validFee] = await Promise.all([
         Axios.get(
-          `http://localhost:4000/feePaymentDB/getCourseFeeDueDate/${courseFeeDueDateId}`
+          `http://localhost:4000/feePaymentDB/getCourseFeeDueDate/${courseFeeDueDateId}`,
+          {
+            cancelToken: source.token
+          }
         ),
         //get year of fee is already submitted
         Axios.get(
           `http://localhost:4000/feePaymentDB/getCourseFeeYear/${localStorage.getItem(
             "token"
-          )}`
+          )}`,
+          { cancelToken: source.token }
         )
       ]);
       const { firstYear, secondYear, thirdYear, fourthYear } = dueDate.data;
@@ -181,7 +185,6 @@ export default function CourseFee(props) {
         thirdYear: new Date(thirdYear).toLocaleString("en-GB"),
         fourthYear: new Date(fourthYear).toLocaleString("en-GB")
       });
-      console.log(validFee.data);
       hideOption(validFee.data);
     };
     fetchData();
@@ -247,7 +250,7 @@ export default function CourseFee(props) {
         return window.alert("fee submission successful");
       })
       .catch(error => console.log(error.message));
-    props.history.push("/courseFee/" + localStorage.getItem("token"));
+    props.history.push("/courseFeeReceipt/" + localStorage.getItem("token"));
   };
 
   return (
