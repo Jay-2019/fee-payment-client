@@ -10,7 +10,9 @@ const publicRoutes = (props) => {
 
     ];
     return routes.map((route, index) => {
-        return <PublicRoute key={index} path={route.path} component={(prop) => <route.component  {...prop} />} />
+        return <PublicRoute key={index} path={route.path} component={(prop) =>
+            <route.component setStudent={props} {...prop} />
+        } />
     });
 }
 export default publicRoutes;

@@ -1,6 +1,14 @@
-import React from "react";
+import React, { StrictMode } from "react";
 import { Redirect } from "react-router-dom";
-export default function SignOut() {
-  localStorage.removeItem("token");
-  return <Redirect to={"/studentSignIn"} />;
+import { useEffect } from "react";
+export default function SignOut(props) {
+  useEffect(() => {
+    localStorage.removeItem("token");
+    props.parentProps.setStudent({});
+  });
+  return (
+    <StrictMode>
+      <Redirect to={"/studentSignIn"} />;
+    </StrictMode>
+  );
 }

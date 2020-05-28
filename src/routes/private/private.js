@@ -13,7 +13,9 @@ const privateRoutes = (props) => {
         { path: "/signOut", component: SignOut },
     ];
     return routes.map((route, index) => {
-        return <PrivateRoute key={index} path={route.path} component={(prop) => <route.component {...prop} />} />
+        return <PrivateRoute key={index} path={route.path} component={(prop) =>
+            <route.component parentProps={props} {...prop} />
+        } />
     });
 }
 export default privateRoutes;

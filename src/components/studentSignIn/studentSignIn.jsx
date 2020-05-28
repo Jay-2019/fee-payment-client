@@ -3,8 +3,6 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
 
-// import {history} from "react-router-dom";
-
 export default function studentSignIn(props) {
   return (
     <Formik
@@ -31,8 +29,8 @@ export default function studentSignIn(props) {
             values.password
         )
           .then(response => {
-            console.log(response.data._id);
             localStorage.setItem("token", response.data._id);
+            props.setStudent(response.data);
             return props.history.push(
               "/studentProfile/" + localStorage.getItem("token")
             );
@@ -43,57 +41,57 @@ export default function studentSignIn(props) {
       <Form>
         <br />
         <div className="d-flex justify-content-center">
-        <div className="card w-75 text-center">
-          <div className="card-header">
-            <h2>Student SignIn</h2>
-          </div>
-          <div className="card-body">
-            <div>
-              <br />
-              <div className="row">
-                <Field
-                  name="email"
-                  type="email"
-                  placeholder="student@gmail.com"
-                  className="form-control"
-                />
-
-                <ErrorMessage
-                  name="email"
-                  render={msg => (
-                    <div className="alert alert-primary" role="alert">
-                      {msg}
-                    </div>
-                  )}
-                />
-              </div>
-              <br />
-              <div className="row">
-                <Field
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  className="form-control"
-                />
-                <ErrorMessage
-                  name="password"
-                  render={msg => (
-                    <div className="alert alert-primary" role="alert">
-                      {msg}
-                    </div>
-                  )}
-                />
-              </div>
-              <br />
+          <div className="card w-75 text-center">
+            <div className="card-header">
+              <h2>Student SignIn</h2>
             </div>
-            <button type="submit" className="btn btn-primary">
-              Sign In{" "}
-            </button>
+            <div className="card-body">
+              <div>
+                <br />
+                <div className="row">
+                  <Field
+                    name="email"
+                    type="email"
+                    placeholder="student@gmail.com"
+                    className="form-control"
+                  />
+
+                  <ErrorMessage
+                    name="email"
+                    render={msg => (
+                      <div className="alert alert-primary" role="alert">
+                        {msg}
+                      </div>
+                    )}
+                  />
+                </div>
+                <br />
+                <div className="row">
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="password"
+                    className="form-control"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    render={msg => (
+                      <div className="alert alert-primary" role="alert">
+                        {msg}
+                      </div>
+                    )}
+                  />
+                </div>
+                <br />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Sign In{" "}
+              </button>
+            </div>
+            <div className="card-footer text-muted">
+              Faculty of engineering & technology
+            </div>
           </div>
-          <div className="card-footer text-muted">
-            Faculty of engineering & technology
-          </div>
-        </div>
         </div>
       </Form>
     </Formik>
