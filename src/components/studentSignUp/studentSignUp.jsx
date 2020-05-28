@@ -2,7 +2,13 @@ import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
-
+import {
+  arrayOfAge,
+  arrayOfBranch,
+  arrayOfGender,
+  arrayOfSemester,
+  arrayOfAdmissionSession
+} from "../constant";
 export default function studentSignUp(props) {
   return (
     <Formik
@@ -13,6 +19,8 @@ export default function studentSignUp(props) {
         age: "",
         gender: "",
         branch: "",
+        fatherName: "",
+        admissionSession: "",
         semester: "",
         password: "",
         confirmPassword: "",
@@ -30,19 +38,23 @@ export default function studentSignUp(props) {
           .email("Invalid email address")
           .required("Required"),
         age: Yup.number()
-          .oneOf(
-            [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-            "Invalid Age"
-          )
+          .oneOf(arrayOfAge, "Invalid Age")
           .required("Required"),
         gender: Yup.string()
-          .oneOf(["Male", "Female", "Other"], "Invalid Gender")
+          .oneOf(arrayOfGender, "Invalid Gender")
           .required("Required"),
         branch: Yup.string()
-          .oneOf([" IT", " FT", "AG", " CIVIL"], "Invalid Branch")
+          .oneOf(arrayOfBranch, "Invalid Branch")
           .required("Required"),
-        semester: Yup.number()
-          .oneOf([8, 7, 6, 5, 4, 3, 2, 1], "Invalid Branch")
+        fatherName: Yup.string()
+          .min(3, "minium 3 characters allow")
+          .max(15, "maximum 15 characters allow")
+          .required("Required"),
+        admissionSession: Yup.string()
+          .oneOf(arrayOfAdmissionSession, "Invalid Admission Session")
+          .required("Required"),
+        semester: Yup.string()
+          .oneOf(arrayOfSemester, "Invalid Branch")
           .required("Required"),
         password: Yup.string()
           .min(4, "Password is too short - should be 4 characters minimum.")
@@ -59,7 +71,7 @@ export default function studentSignUp(props) {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         Axios.post("http://localhost:4000/feePaymentDB/studentSignUp", values)
           .then(response => {
-            return response.data;
+            return window.alert("Congratulations ");
           })
           .catch(error => error.message);
         setSubmitting(true);
@@ -81,7 +93,7 @@ export default function studentSignUp(props) {
                     <Field
                       name="firstName"
                       type="text"
-                      placeholder="firstName"
+                      placeholder="First Name"
                       className="form-control"
                     />
 
@@ -92,7 +104,7 @@ export default function studentSignUp(props) {
                     <Field
                       name="lastName"
                       type="text"
-                      placeholder="lastName"
+                      placeholder="Last Name"
                       className="form-control"
                     />
                     <ErrorMessage name="lastName" />
@@ -105,23 +117,7 @@ export default function studentSignUp(props) {
                       <option disabled value="">
                         Age...
                       </option>
-                      {[
-                        16,
-                        17,
-                        18,
-                        19,
-                        20,
-                        21,
-                        22,
-                        23,
-                        24,
-                        25,
-                        26,
-                        27,
-                        28,
-                        29,
-                        30
-                      ].map((age, index) => (
+                      {arrayOfAge.map((age, index) => (
                         <option key={index} value={age}>
                           {age}
                         </option>
@@ -134,7 +130,7 @@ export default function studentSignUp(props) {
                       <option disabled value="">
                         Gender...
                       </option>
-                      {["Male", "Female", "Other"].map((gender, index) => (
+                      {arrayOfGender.map((gender, index) => (
                         <option key={index} value={gender}>
                           {gender}
                         </option>
@@ -150,9 +146,9 @@ export default function studentSignUp(props) {
                       <option disabled value="">
                         B.Tech...
                       </option>
-                      {[" IT", " FT", "AG", " CIVIL"].map((branch, index) => (
+                      {arrayOfBranch.map((branch, index) => (
                         <option key={index} value={branch}>
-                          {"B.Tech" + branch}
+                          {branch}
                         </option>
                       ))}
                     </Field>
@@ -167,13 +163,44 @@ export default function studentSignUp(props) {
                       <option disabled value="">
                         Semester...
                       </option>
-                      {[8, 7, 6, 5, 4, 3, 2, 1].map((semester, index) => (
+                      {arrayOfSemester.map((semester, index) => (
                         <option key={index} value={semester}>
-                          {semester + "th"}
+                          {semester}
                         </option>
                       ))}
                     </Field>
                     <ErrorMessage name="semester" />
+                  </div>
+                </div>
+                <br />
+                <div className="row">
+                  <div className="col">
+                    <Field
+                      name="fatherName"
+                      type="string"
+                      placeholder="Father Name"
+                      className="form-control"
+                    />
+                    <ErrorMessage name="fatherName" />
+                  </div>
+                  <div className="col">
+                    <Field
+                      as="select"
+                      name="admissionSession"
+                      className="custom-select"
+                    >
+                      <option disabled value="">
+                        Admission Session...
+                      </option>
+                      {arrayOfAdmissionSession.map(
+                        (admissionSession, index) => (
+                          <option key={index} value={admissionSession}>
+                            {admissionSession}
+                          </option>
+                        )
+                      )}
+                    </Field>
+                    <ErrorMessage name="admissionSession" />
                   </div>
                 </div>
                 <br />
@@ -191,6 +218,7 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="email" />
                   </div>
                 </div>
+
                 <br />
                 <div className="row">
                   <div className="col">

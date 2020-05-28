@@ -18,12 +18,13 @@ export default function CourseFee(props) {
 
   const [table, setTable] = useState(false);
   const [idOfSelectedYear, setIdOfSelectedYear] = useState("");
+  const [courseFeeType, setCourseFeeType] = useState({});
   const [fee, setFee] = useState(0);
-  const [lateFeeFine, setLateFeeFine] = useState(0);
+  const [delayFeeFine, setDelayFeeFine] = useState(0);
   const [feeInfo, setFeeInfo] = useState({
     year: "",
     courseFee: 0,
-    lateFee: 0,
+    delayFee: 0,
     totalFee: 0
   });
 
@@ -50,7 +51,7 @@ export default function CourseFee(props) {
               <b>Late Fee</b>
             </th>
             <td>
-              <b>{feeInfo.lateFee}.00 Rs</b>
+              <b>{feeInfo.delayFee}.00 Rs</b>
             </td>
           </tr>
 
@@ -97,7 +98,7 @@ export default function CourseFee(props) {
 
   const checkDueDate = yearOfDueDate => {
     if (yearOfDueDate < new Date().toLocaleString("en-GB")) {
-      return lateFeeFine;
+      return delayFeeFine;
     }
     return 0;
   };
@@ -106,27 +107,27 @@ export default function CourseFee(props) {
     feeInfo.courseFee = fee;
     switch (idOfSelectedYear) {
       case "5ec13f8678ea5a2e0c1a6bfe":
-        feeInfo.lateFee = checkDueDate(dueDate.firstYear);
+        feeInfo.delayFee = checkDueDate(dueDate.firstYear);
         break;
       case "5ec13ffc78ea5a2e0c1a6bff":
-        feeInfo.lateFee = checkDueDate(dueDate.secondYear);
+        feeInfo.delayFee = checkDueDate(dueDate.secondYear);
         break;
       case "5ec1401078ea5a2e0c1a6c00":
-        feeInfo.lateFee = checkDueDate(dueDate.thirdYear);
+        feeInfo.delayFee = checkDueDate(dueDate.thirdYear);
         break;
       case "5ec1402178ea5a2e0c1a6c01":
-        feeInfo.lateFee = checkDueDate(dueDate.fourthYear);
+        feeInfo.delayFee = checkDueDate(dueDate.fourthYear);
         break;
       default:
         return null;
     }
 
-    if (fee && lateFeeFine) {
+    if (fee && delayFeeFine) {
       setFeeInfo({
         year: feeInfo.year,
         courseFee: feeInfo.courseFee,
-        lateFee: feeInfo.lateFee,
-        totalFee: fee + feeInfo.lateFee
+        delayFee: feeInfo.delayFee,
+        totalFee: fee + feeInfo.delayFee
       });
     }
     return setTable(true);
@@ -180,6 +181,7 @@ export default function CourseFee(props) {
         thirdYear: new Date(thirdYear).toLocaleString("en-GB"),
         fourthYear: new Date(fourthYear).toLocaleString("en-GB")
       });
+      console.log(validFee.data);
       hideOption(validFee.data);
     };
     fetchData();
@@ -199,8 +201,9 @@ export default function CourseFee(props) {
     )
       .then(response => {
         const { totalFee, delayFee } = response.data;
-        setLateFeeFine(delayFee);
-        return setFee(totalFee);
+        setDelayFeeFine(delayFee);
+        setFee(totalFee);
+        return setCourseFeeType(response.data);
       })
       .catch(error => console.log(error.message));
 
@@ -216,17 +219,29 @@ export default function CourseFee(props) {
     return () => {
       source.cancel("Cancelling in cleanup");
     };
-  }, [fee, lateFeeFine]);
+  }, [fee, delayFeeFine]);
 
   const handleSubmit = e => {
     e.preventDefault();
     if (feeInfo.year === "")
       return window.alert("please select valid year for fee payment");
 
+    const data = {
+      feeInfo: feeInfo,
+      studentInfo: {
+        firstName: props.parentProps.student.firstName,
+        lastName: props.parentProps.student.lastName,
+        fatherName: props.parentProps.student.fatherName,
+        branch: props.parentProps.student.branch,
+        admissionSession: props.parentProps.student.admissionSession
+      },
+      courseFeeType: courseFeeType
+    };
+
     Axios.post(
       "http://localhost:4000/feePaymentDB/courseFeePayment/" +
         props.match.params.id,
-      feeInfo
+      data
     )
       .then(response => {
         return window.alert("fee submission successful");
