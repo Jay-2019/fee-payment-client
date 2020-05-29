@@ -4,13 +4,13 @@ import PublicRoute from "./publicRoute";
 
 const publicRoutes = (props) => {
     const routes = [
-        // { path: "/", component: StudentSignUp },
+        { path: "/", component: StudentSignIn },
         { path: "/studentSignUp", component: StudentSignUp },
         { path: "/studentSignIn", component: StudentSignIn },
 
     ];
     return routes.map((route, index) => {
-        return <PublicRoute key={index} path={route.path} component={(prop) =>
+        return <PublicRoute key={index} exact path={route.path} component={(prop) =>
             <route.component setStudent={props} {...prop} />
         } />
     });
