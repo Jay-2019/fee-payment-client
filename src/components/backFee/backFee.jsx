@@ -10,14 +10,10 @@ import { arrayOfSemester, arrayOfBranch } from "../constant";
 const idOfBackFeeType = "5ec376a132e3ab0f689a9d34";
 const idOfBackFeeDueDate = "5ec3822919bba72e54e8651d";
 export default function BackFee(props) {
+  const MultiselectRef = React.createRef();
   const navigationBar = useNavigationBar();
 
-  const [backFeeType, setBackFeeType] = useState({
-    totalFee: 0,
-    examinationFormFee: 0,
-    backPaper: 0,
-    delayFee: 0
-  });
+  const [backFeeType, setBackFeeType] = useState({});
   const [dueDate, setDueDate] = useState({
     firstSemester: "",
     secondSemester: "",
@@ -33,7 +29,7 @@ export default function BackFee(props) {
     semester: "",
     branch: "",
     backFee: 0,
-    lateFee: 0,
+    delayFee: 0,
     totalFee: 0
   });
   const [semester, setSemester] = useState("");
@@ -56,10 +52,10 @@ export default function BackFee(props) {
           </tr>
           <tr className="table-secondary">
             <th scope="row">
-              <b>Late Fee</b>
+              <b>Delay Fee</b>
             </th>
             <td>
-              <b>{feeInfo.lateFee}Rs</b>
+              <b>{feeInfo.delayFee}Rs</b>
             </td>
           </tr>
           <tr className="table-success">
@@ -91,28 +87,28 @@ export default function BackFee(props) {
   const calculateFee = semester => {
     switch (semester) {
       case "First Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.firstSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.firstSemester);
         break;
       case "Second Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.secondSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.secondSemester);
         break;
       case "Third Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.thirdSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.thirdSemester);
         break;
       case "Fourth Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.fourthSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.fourthSemester);
         break;
       case "Fifth Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.fifthSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.fifthSemester);
         break;
       case "Sixth Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.sixthSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.sixthSemester);
         break;
       case "Seventh Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.seventhSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.seventhSemester);
         break;
       case "Eighth Semester":
-        feeInfo.lateFee = checkDueDate(dueDate.eighthSemester);
+        feeInfo.delayFee = checkDueDate(dueDate.eighthSemester);
         break;
       default:
         return null;
@@ -120,11 +116,11 @@ export default function BackFee(props) {
 
     if (backFeeType.backPaper) {
       feeInfo.totalFee =
-        backFeeType.backPaper * selectSubject.length + feeInfo.lateFee;
+        backFeeType.totalFee * selectSubject.length + feeInfo.delayFee;
       setFeeInfo({
         subject: selectSubject,
-        backFee: (backFeeType.backPaper * selectSubject.length).toFixed(2),
-        lateFee: feeInfo.lateFee.toFixed(2),
+        backFee: (backFeeType.totalFee * selectSubject.length).toFixed(2),
+        delayFee: feeInfo.delayFee.toFixed(2),
         totalFee: feeInfo.totalFee.toFixed(2)
       });
       setTable(true);
@@ -143,18 +139,19 @@ export default function BackFee(props) {
     const fetchData = async () => {
       const [backFeeType, dueDate] = [
         await Axios.get(
-          `http://localhost:4000/feePaymentDB/getBackFeeType/${idOfBackFeeType}`
+          `http://localhost:4000/feePaymentDB/getBackFeeType/${idOfBackFeeType}`,
+          {
+            cancelToken: source.token
+          }
         ),
         await Axios.get(
-          `http://localhost:4000/feePaymentDB/getBackFeeDueDate/${idOfBackFeeDueDate}`
+          `http://localhost:4000/feePaymentDB/getBackFeeDueDate/${idOfBackFeeDueDate}`,
+          {
+            cancelToken: source.token
+          }
         )
       ];
-      const {
-        totalFee,
-        examinationFormFee,
-        backPaper,
-        delayFee
-      } = backFeeType.data;
+      setBackFeeType(backFeeType.data);
       const {
         firstSemester,
         secondSemester,
@@ -165,7 +162,6 @@ export default function BackFee(props) {
         seventhSemester,
         eighthSemester
       } = dueDate.data;
-      setBackFeeType({ totalFee, examinationFormFee, backPaper, delayFee });
       setDueDate({
         firstSemester: new Date(firstSemester).toLocaleString("en-GB"),
         secondSemester: new Date(secondSemester).toLocaleString("en-GB"),
@@ -185,13 +181,21 @@ export default function BackFee(props) {
   }, []);
 
   useEffect(() => {
+    let source = Axios.CancelToken.source();
     Axios.get(
-      `http://localhost:4000/feePaymentDB/getSubject/${semester}/${branch}`
+      `http://localhost:4000/feePaymentDB/getSubject/${semester}/${branch}`,
+      {
+        cancelToken: source.token
+      }
     )
       .then(response => {
         setSubject(response.data);
       })
       .catch(error => console.log(error.message));
+
+    return () => {
+      source.cancel("Cancelling in cleanup");
+    };
   }, [semester, branch]);
 
   useEffect(() => {
@@ -216,7 +220,7 @@ export default function BackFee(props) {
   };
 
   return (
-    <>
+    <div>
       <form onSubmit={handleSubmit}>
         {navigationBar}
         <br />
@@ -256,6 +260,7 @@ export default function BackFee(props) {
                 </select>
                 <hr />
                 <Multiselect
+                  ref={MultiselectRef}
                   busy
                   data={subject}
                   autoFocus={false}
@@ -273,6 +278,6 @@ export default function BackFee(props) {
           </div>
         </div>
       </form>
-    </>
+    </div>
   );
 }
