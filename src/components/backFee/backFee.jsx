@@ -9,21 +9,16 @@ import { arrayOfSemester, arrayOfBranch } from "../constant";
 
 const idOfBackFeeType = "5ec376a132e3ab0f689a9d34";
 const idOfBackFeeDueDate = "5ec3822919bba72e54e8651d";
+
 export default function BackFee(props) {
-  const MultiselectRef = React.createRef();
   const navigationBar = useNavigationBar();
 
   const [backFeeType, setBackFeeType] = useState({});
-  const [dueDate, setDueDate] = useState({
-    firstSemester: "",
-    secondSemester: "",
-    thirdSemester: "",
-    fourthSemester: "",
-    fifthSemester: "",
-    sixthSemester: "",
-    seventhSemester: "",
-    eighthSemester: ""
-  });
+  const [dueDate, setDueDate] = useState({});
+  const [semester, setSemester] = useState("");
+  const [branch, setBranch] = useState("");
+  const [subject, setSubject] = useState([]);
+  const [selectSubject, setSelectSubject] = useState([]);
   const [feeInfo, setFeeInfo] = useState({
     subject: [],
     semester: "",
@@ -32,10 +27,7 @@ export default function BackFee(props) {
     delayFee: 0,
     totalFee: 0
   });
-  const [semester, setSemester] = useState("");
-  const [branch, setBranch] = useState("");
-  const [subject, setSubject] = useState([]);
-  const [selectSubject, setSelectSubject] = useState([]);
+
   const [table, setTable] = useState(false);
 
   const showTable = (
@@ -119,6 +111,8 @@ export default function BackFee(props) {
         backFeeType.totalFee * selectSubject.length + feeInfo.delayFee;
       setFeeInfo({
         subject: selectSubject,
+        semester: semester,
+        branch: branch,
         backFee: (backFeeType.totalFee * selectSubject.length).toFixed(2),
         delayFee: feeInfo.delayFee.toFixed(2),
         totalFee: feeInfo.totalFee.toFixed(2)
@@ -132,6 +126,12 @@ export default function BackFee(props) {
   };
   const handleBranchChange = e => {
     setBranch(e.target.value);
+  };
+
+  const reSet = () => {
+    setSemester("");
+    setBranch("");
+    setSelectSubject([]);
   };
 
   useEffect(() => {
@@ -199,24 +199,45 @@ export default function BackFee(props) {
   }, [semester, branch]);
 
   useEffect(() => {
+    let source = Axios.CancelToken.source();
     calculateFee(semester);
+    return () => {
+      source.cancel("Cancelling in cleanup");
+    };
   }, [selectSubject]);
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (!(semester && branch && feeInfo.subject))
+    if (!(semester && branch && feeInfo.subject)) {
+      setSemester();
+      setBranch();
+      setSelectSubject();
       return window.alert("please select valid information");
-    console.log(feeInfo);
+    }
+
+    const data = {
+      feeInfo: feeInfo,
+      studentInfo: {
+        firstName: props.parentProps.student.firstName,
+        lastName: props.parentProps.student.lastName,
+        fatherName: props.parentProps.student.fatherName,
+        branch: props.parentProps.student.branch,
+        admissionSession: props.parentProps.student.admissionSession
+      },
+      backFeeType: backFeeType
+    };
 
     Axios.post(
       "http://localhost:4000/feePaymentDB/backFeePayment/" +
         props.match.params.id,
-      feeInfo
+      data
     )
       .then(response => {
-        return window.alert("fee submission successful");
+        return  window.alert("fee submission successful");
       })
       .catch(error => console.log(error.message));
+      reSet();
+    props.history.push("/backFeeReceipt/" + localStorage.getItem("token"));
   };
 
   return (
@@ -260,8 +281,7 @@ export default function BackFee(props) {
                 </select>
                 <hr />
                 <Multiselect
-                  ref={MultiselectRef}
-                  busy
+                  // busy
                   data={subject}
                   autoFocus={false}
                   onChange={value => setSelectSubject(value)}
