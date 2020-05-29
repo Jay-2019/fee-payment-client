@@ -16,7 +16,7 @@ export default function App() {
   }, []);
 
   return (
-    <StrictMode>
+    <>
       < div className="container-fluid">
         <Router>
           <Switch>
@@ -25,6 +25,6 @@ export default function App() {
           </Switch>
         </Router>
       </div>
-    </StrictMode>
+    </>
   );
 }
