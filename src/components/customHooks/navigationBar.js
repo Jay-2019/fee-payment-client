@@ -1,38 +1,40 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 
-export default function useNavigationBar() {
+export default function useNavigationBar(props) {
+   
     return (
         <>
-
             {/* navbar navbar-dark bg-dark */}
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a className="navbar-brand" href="/">Navbar</a>
+                {/* <a className="navbar-brand" href="/">{props}</a> */}
+                <h2 className="navbar-brand">{props}</h2>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div className="navbar-nav">
+                <div className=" collapse navbar-collapse" id="navbarNavAltMarkup">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div className=" navbar-nav">
                         <Link className="nav-item nav-link " to={"/about"} >
-                            About
+                            <b>About</b>
                         </Link>
                         <Link className="nav-item nav-link " to={"/myProfile/" + localStorage.getItem("token")} >
-                            My Profile
+                            <b>My Profile</b>
                         </Link>
                         <Link className="nav-item nav-link " to={"/courseFee/" + localStorage.getItem("token")} >
-                            Course Fee
+                            <b>  Course Fee</b>
                         </Link>
                         <Link className="nav-item nav-link " to={"/backFee/" + localStorage.getItem("token")} >
-                            Back Fee
-                              </Link>
+                            <b> Back Fee</b>
+                        </Link>
                         <Link className="nav-item nav-link " to={"/courseFeeReceipt/" + localStorage.getItem("token")} >
-                            Course Fee Receipt
+                            <b>  Course Fee Receipt</b>
                         </Link>
                         <Link className="nav-item nav-link " to={"/backFeeReceipt/" + localStorage.getItem("token")} >
-                            Back Fee Receipt
+                            <b> Back Fee Receipt</b>
                         </Link>
                         <Link className="nav-item nav-link " to={"/signOut"} >
-                            Sign Out
+                            <b> Sign Out</b>
                         </Link>
                     </div>
                 </div>

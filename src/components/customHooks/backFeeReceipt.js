@@ -1,49 +1,79 @@
 import React from "react";
 import style from "../../style/style.module.css";
 export default function useBackFeeReceipt(props) {
-    const Card = (feeInfo) => (
-        <div className={`card border-warning  bg-secondary   text-center ${style.receiptWidth}`} >
+    const Card = ({ feeInfo, studentInfo, createdAt }) => (
+
+        <div className={`card border-danger bg-info text-center ${style.receiptWidth}`} >
             <div className="card-header">
                 <div className="card-title">
-                    <h4>{new Date(feeInfo.feeInfo.createdAt).toLocaleDateString("en-GB")}</h4>
+                    <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
                 </div>
             </div>
             <div className="card-body">
                 <div className="row">
                     <div className="col">
-                        <h4>Subject</h4>
+                        <h4>{`${studentInfo.firstName} ${studentInfo.lastName}`}</h4>
                     </div>
                     <div className="col">
-                        <h4>{feeInfo.feeInfo.subject}</h4>
+                        <h4>{`${studentInfo.branch}`}</h4>
                     </div>
                 </div>
+                <hr />
+                {/* <div className="row">
+                    <div className="col">
+                        <h4>Semester</h4>
+                    </div>
+                    <div className="col">
+                        <h4>{feeInfo.semester}</h4>
+                    </div>
+                </div>
+                <hr /> */}
+                <div className="row">
+                    <div className="col">
+                        <h4>Subjects</h4>
+                    </div>
+                    <div className="col">
+                        {
+                            feeInfo.subject.map((subject, index) => (
+                                <>
+                                    <div key={index} className="col">
+                                        <h4 key={index}>{subject}</h4>
+                                    </div>
+                                </>
+                            ))
+                        }
+                    </div>
+                </div>
+                <hr />
                 <div className="row">
                     <div className="col">
                         <h4>Course Fee</h4>
                     </div>
                     <div className="col">
-                        <h4>{feeInfo.feeInfo.backFee}</h4>
+                        <h4>{feeInfo.backFee}</h4>
                     </div>
                 </div>
+                <hr />
                 <div className="row">
                     <div className="col">
-                        <h4>Late Fee</h4>
+                        <h4>Delay Fee</h4>
                     </div>
                     <div className="col">
-                        <h4>{feeInfo.feeInfo.lateFee}</h4>
+                        <h4>{feeInfo.delayFee}</h4>
                     </div>
                 </div>
+                <hr />
                 <div className="row">
                     <div className="col">
                         <h4>Total Fee</h4>
                     </div>
                     <div className="col">
-                        <h4>{feeInfo.feeInfo.totalFee}</h4>
+                        <h4>{feeInfo.totalFee}</h4>
 
                     </div>
                 </div>
             </div>
-            <br />
+
             <div className="card-footer text-muted">
                 Faculty of engineering & technology
             </div>
@@ -51,11 +81,19 @@ export default function useBackFeeReceipt(props) {
     )
     const listReceipt = () => {
         return props.fee.map((data, index) => {
-
-            console.log(data.totalFee);
-            return <Card key={index} feeInfo={data} />
+            const { feeInfo, studentInfo } = data;
+            return <>
+                <Card
+                    key={index}
+                    feeInfo={feeInfo}
+                    studentInfo={studentInfo}
+                    createdAt={data.createdAt}
+                />
+                <hr />
+            </>
         });
     }
+
     return (
         <>
             <div className="d-flex justify-content-center">
