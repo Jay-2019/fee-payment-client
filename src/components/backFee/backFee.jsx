@@ -11,7 +11,7 @@ const idOfBackFeeType = "5ec376a132e3ab0f689a9d34";
 const idOfBackFeeDueDate = "5ec3822919bba72e54e8651d";
 
 export default function BackFee(props) {
-  const navigationBar = useNavigationBar();
+  const navigationBar = useNavigationBar(props.parentProps.student.firstName);
 
   const [backFeeType, setBackFeeType] = useState({});
   const [dueDate, setDueDate] = useState({});
@@ -136,6 +136,7 @@ export default function BackFee(props) {
 
   useEffect(() => {
     let source = Axios.CancelToken.source();
+
     const fetchData = async () => {
       const [backFeeType, dueDate] = [
         await Axios.get(
@@ -233,10 +234,10 @@ export default function BackFee(props) {
       data
     )
       .then(response => {
-        return  window.alert("fee submission successful");
+        return window.alert("fee submission successful");
       })
       .catch(error => console.log(error.message));
-      reSet();
+    reSet();
     props.history.push("/backFeeReceipt/" + localStorage.getItem("token"));
   };
 

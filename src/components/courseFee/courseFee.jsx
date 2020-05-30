@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 const courseFeeDueDateId = "5ec0ec3d70f1cc05e0d9f6d8";
 
 export default function CourseFee(props) {
-  const navigationBar = useNavigationBar();
+  const navigationBar = useNavigationBar(props.parentProps.student.firstName);
   const [dueDate, setDueDate] = useState({
     firstYear: "",
     secondYear: "",
@@ -48,7 +48,7 @@ export default function CourseFee(props) {
 
           <tr className="table-warning">
             <th scope="row">
-              <b>Late Fee</b>
+              <b>Delay Fee</b>
             </th>
             <td>
               <b>{feeInfo.delayFee}.00 Rs</b>
