@@ -1,7 +1,8 @@
-import React, { StrictMode, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { publicRoutes, privateRoutes } from "./routes/index";
+import { NoMatch } from './components/index';
 import Axios from "axios";
 
 export default function App() {
@@ -22,6 +23,9 @@ export default function App() {
           <Switch>
             {publicRoutes(setStudent)}
             {privateRoutes({ student, setStudent })}
+            <Route path="*">
+              <NoMatch />
+            </Route>
           </Switch>
         </Router>
       </div>
