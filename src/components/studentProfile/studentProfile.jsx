@@ -4,7 +4,7 @@ import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 
 export default function StudentProfile(props) {
-  const navigationBar = useNavigationBar();
+  const navigationBar = useNavigationBar(props.parentProps.student.firstName);
 
   return (
     <StrictMode>

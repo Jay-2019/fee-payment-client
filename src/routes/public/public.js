@@ -7,7 +7,6 @@ const publicRoutes = (props) => {
         { path: "/", component: StudentSignIn },
         { path: "/studentSignUp", component: StudentSignUp },
         { path: "/studentSignIn", component: StudentSignIn },
-
     ];
     return routes.map((route, index) => {
         return <PublicRoute key={index} exact path={route.path} component={(prop) =>

@@ -6,4 +6,14 @@ import BackFee from "./backFee/backFee";
 import SignOut from "./signOut/signOut";
 import CourseFeeReceipt from "./CourseFeeReceipt/courseFeeReceipt";
 import BackFeeReceipt from "./BackFeeReceipt/BackFeeReceipt";
-export { StudentSignUp, StudentSignIn, StudentProfile, CourseFee, BackFee, SignOut, CourseFeeReceipt, BackFeeReceipt };
+import NoMatch from "./noMatch/noMatch";
+export {
+    StudentSignUp,
+    StudentSignIn,
+    StudentProfile,
+    CourseFee, BackFee,
+    SignOut,
+    CourseFeeReceipt,
+    BackFeeReceipt,
+    NoMatch
+};
