@@ -4,7 +4,8 @@
 }
 
 .receiptWidth {
-  width: 600px;
+  width: 100%;
+  height: 100%;
 }
 
 .tableText {
@@ -16,6 +17,6 @@
   color: orange;
 }
 
-.backFeeTitle{
+.backFeeTitle {
   color: #dc3545;
 }

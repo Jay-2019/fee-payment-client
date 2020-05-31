@@ -247,55 +247,57 @@ export default function BackFee(props) {
         {navigationBar}
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card border-light bg-dark text-white w-75 text-center">
-            <div
-              className={`card-header border-secondary ${style.backFeeTitle}`}
-            >
-              <h2>Back Fee</h2>
-            </div>
-            <div className="card-body">
-              <div>
-                <select
-                  name="semester"
-                  className="custom-select"
-                  onChange={handleSemesterChange}
-                  required
-                >
-                  <option hidden>Select Semester...</option>
-                  {arrayOfSemester.map((semester, index) => (
-                    <option key={index} value={semester}>
-                      {semester}
-                    </option>
-                  ))}
-                </select>
-                <hr />
-                <select
-                  name="branch"
-                  className="custom-select"
-                  onChange={handleBranchChange}
-                  required
-                >
-                  <option hidden>Select Branch...</option>
-                  {arrayOfBranch.map((branch, index) => (
-                    <option key={index} value={branch}>
-                      {branch}
-                    </option>
-                  ))}
-                </select>
-                <hr />
-                <Multiselect
-                  // busy
-                  data={subject}
-                  autoFocus={false}
-                  onChange={value => setSelectSubject(value)}
-                  placeholder="Select one or more Subjects"
-                />
-                <br />
-                <div>{table ? showTable : null}</div>
+          <div className="col-sm-12 col-md-8">
+            <div className="card border-light bg-dark text-white text-center">
+              <div
+                className={`card-header border-secondary ${style.backFeeTitle}`}
+              >
+                <h2>Back Fee</h2>
               </div>
-            </div>
-            <div className="card-footer border-secondary text-muted">
-              Faculty of engineering & technology
+              <div className="card-body">
+                <div>
+                  <select
+                    name="semester"
+                    className="custom-select"
+                    onChange={handleSemesterChange}
+                    required
+                  >
+                    <option hidden>Select Semester...</option>
+                    {arrayOfSemester.map((semester, index) => (
+                      <option key={index} value={semester}>
+                        {semester}
+                      </option>
+                    ))}
+                  </select>
+                  <hr />
+                  <select
+                    name="branch"
+                    className="custom-select"
+                    onChange={handleBranchChange}
+                    required
+                  >
+                    <option hidden>Select Branch...</option>
+                    {arrayOfBranch.map((branch, index) => (
+                      <option key={index} value={branch}>
+                        {branch}
+                      </option>
+                    ))}
+                  </select>
+                  <hr />
+                  <Multiselect
+                    // busy
+                    data={subject}
+                    autoFocus={false}
+                    onChange={value => setSelectSubject(value)}
+                    placeholder="Select one or more Subjects"
+                  />
+                  <br />
+                  <div>{table ? showTable : null}</div>
+                </div>
+              </div>
+              <div className="card-footer border-secondary text-muted">
+                Faculty of engineering & technology
+              </div>
             </div>
           </div>
         </div>

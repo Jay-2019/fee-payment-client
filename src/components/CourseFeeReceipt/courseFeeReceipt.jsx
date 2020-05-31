@@ -35,7 +35,11 @@ export default function CourseFeeReceipt(props) {
       <div>{navigationBar}</div>
       {/* <h4>{title}</h4> */}
       <hr />
-      <div>{courseFeeReceipt}</div>
+      <div className="d-flex justify-content-center">
+        <div className="col-sm-12 col-md-8">
+          <div>{courseFeeReceipt}</div>
+        </div>
+      </div>
     </div>
   );
 }

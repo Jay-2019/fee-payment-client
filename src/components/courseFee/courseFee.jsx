@@ -259,49 +259,51 @@ export default function CourseFee(props) {
         {navigationBar}
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card border-light bg-dark text-white w-75 text-center">
-            <div
-              className={`card-header border-secondary ${style.courseFeeTitle}`}
-            >
-              <h2>Course Fee</h2>
-            </div>
-            <div className="card-body">
-              <div>
-                <select
-                  name="year"
-                  className="custom-select"
-                  onChange={handleYearChange}
-                >
-                  <option hidden>Select Year...</option>
-                  {hideFirstYear ? (
-                    <option hidden>{`1st Year`}</option>
-                  ) : (
-                    <option value="First Year">{`1st Year`} </option>
-                  )}
-                  {hideSecondYear ? (
-                    <option hidden>{`2nd Year`}</option>
-                  ) : (
-                    <option value="Second Year">{`2nd Year`} </option>
-                  )}
-                  {hideThirdYear ? (
-                    <option hidden>{`3rd Year`}</option>
-                  ) : (
-                    <option value="Third Year">{`3rd Year`} </option>
-                  )}
-                  {hideFourthYear ? (
-                    <option hidden>{`4th Year`}</option>
-                  ) : (
-                    <option value="Fourth Year">{`4th Year`} </option>
-                  )}
-                </select>
+          <div className="col-sm-12 col-md-8">
+            <div className="card border-light bg-dark text-white text-center">
+              <div
+                className={`card-header border-secondary ${style.courseFeeTitle}`}
+              >
+                <h2>Course Fee</h2>
+              </div>
+              <div className="card-body">
                 <div>
-                  <br />
-                  {table ? showTable : null}
+                  <select
+                    name="year"
+                    className="custom-select"
+                    onChange={handleYearChange}
+                  >
+                    <option hidden>Select Year...</option>
+                    {hideFirstYear ? (
+                      <option hidden>{`1st Year`}</option>
+                    ) : (
+                      <option value="First Year">{`1st Year`} </option>
+                    )}
+                    {hideSecondYear ? (
+                      <option hidden>{`2nd Year`}</option>
+                    ) : (
+                      <option value="Second Year">{`2nd Year`} </option>
+                    )}
+                    {hideThirdYear ? (
+                      <option hidden>{`3rd Year`}</option>
+                    ) : (
+                      <option value="Third Year">{`3rd Year`} </option>
+                    )}
+                    {hideFourthYear ? (
+                      <option hidden>{`4th Year`}</option>
+                    ) : (
+                      <option value="Fourth Year">{`4th Year`} </option>
+                    )}
+                  </select>
+                  <div>
+                    <br />
+                    {table ? showTable : null}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="card-footer border-secondary text-muted">
-              Faculty of engineering & technology
+              <div className="card-footer border-secondary text-muted">
+                Faculty of engineering & technology
+              </div>
             </div>
           </div>
         </div>

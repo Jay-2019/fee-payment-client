@@ -1,9 +1,9 @@
 import React from "react";
-import style from "../../style/style.module.css";
+// import style from "../../style/style.module.css";
 export default function useCourseFeeReceipt(props) {
     const Card = ({ feeInfo, studentInfo, createdAt }) => (
 
-        <div className={`card border-light text-white bg-dark text-center ${style.receiptWidth}`} >
+        <div className={`card border-light text-white bg-dark text-center `} >
             <div className="card-header border-secondary">
                 <div className="card-title">
                     <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
@@ -75,7 +75,7 @@ export default function useCourseFeeReceipt(props) {
     return (
         <>
             <div className="d-flex justify-content-center">
-                <ul>  {listReceipt()}</ul>
+                <>  {listReceipt()}</>
             </div>
         </>
     )
