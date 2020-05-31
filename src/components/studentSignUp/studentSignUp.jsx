@@ -82,8 +82,8 @@ export default function studentSignUp(props) {
       <Form>
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card w-75 ">
-            <div className="card-header  text-center">
+          <div className="card text-white bg-dark w-75 ">
+            <div className="card-header text-center">
               <h2>Student SignUp</h2>
             </div>
             <div className="card-body">
@@ -205,7 +205,7 @@ export default function studentSignUp(props) {
                 </div>
                 <br />
                 <div className="row">
-                  <div className="col">
+                  <div className="col text-left">
                     <Field
                       name="email"
                       type="email"
@@ -246,7 +246,7 @@ export default function studentSignUp(props) {
 
                 <br />
                 <div className="row">
-                  <div className="col">
+                  <div className="col text-left">
                     <Field type="checkbox" name="acceptTerms" /> &nbsp;
                     <label htmlFor="acceptTerms" className="form-check-label">
                       Accept Terms & Conditions
@@ -255,7 +255,7 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="acceptTerms" />
                   </div>
                 </div>
-
+                <br />
                 <div className="row">
                   <div className="col text-center">
                     <button type="submit" className="btn btn-primary">
@@ -265,7 +265,7 @@ export default function studentSignUp(props) {
                 </div>
               </div>
             </div>
-            <div className="card-footer text-center">
+            <div className="card-footer text-center ">
               Faculty of engineering & technology
             </div>
           </div>

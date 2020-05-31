@@ -247,8 +247,10 @@ export default function BackFee(props) {
         {navigationBar}
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card border-danger bg-dark text-white w-75 text-center">
-            <div className={`card-header ${style.backFeeTitle}`}>
+          <div className="card border-light bg-dark text-white w-75 text-center">
+            <div
+              className={`card-header border-secondary ${style.backFeeTitle}`}
+            >
               <h2>Back Fee</h2>
             </div>
             <div className="card-body">
@@ -288,13 +290,12 @@ export default function BackFee(props) {
                   onChange={value => setSelectSubject(value)}
                   placeholder="Select one or more Subjects"
                 />
-                <br /> <br /> <br />
+                <br />
                 <div>{table ? showTable : null}</div>
               </div>
-              <br />
-              <div className="card-footer text-muted">
-                Faculty of engineering & technology
-              </div>
+            </div>
+            <div className="card-footer border-secondary text-muted">
+              Faculty of engineering & technology
             </div>
           </div>
         </div>

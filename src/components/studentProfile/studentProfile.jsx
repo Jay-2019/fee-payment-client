@@ -11,15 +11,15 @@ export default function StudentProfile(props) {
       {navigationBar}
       <br />
       <div className="d-flex justify-content-center">
-        <div className="card border-warning bg-dark text-white w-75 text-center">
-          <div className={`card-header ${style.courseFeeTitle}`}>
+        <div className="card border-light text-white bg-dark w-50 text-center">
+          <div
+            className={`card-header border-secondary ${style.courseFeeTitle}`}
+          >
             <h2>My Profile</h2>
-            {props.parentProps.student.firstName}
           </div>
-          <div className="card-body">
-            <div className="card-footer text-muted">
-              Faculty of engineering & technology
-            </div>
+          <div className="card-body">{props.parentProps.student.firstName}</div>
+          <div className="card-footer border-secondary text-muted">
+            Faculty of engineering & technology
           </div>
         </div>
       </div>

@@ -3,8 +3,8 @@ import style from "../../style/style.module.css";
 export default function useBackFeeReceipt(props) {
     const Card = ({ feeInfo, studentInfo, createdAt }) => (
 
-        <div className={`card border-danger bg-info text-center ${style.receiptWidth}`} >
-            <div className="card-header">
+        <div className={`card border-light text-white bg-dark text-center ${style.receiptWidth}`} >
+            <div className="card-header border-secondary">
                 <div className="card-title">
                     <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
                 </div>
@@ -35,11 +35,7 @@ export default function useBackFeeReceipt(props) {
                     <div className="col">
                         {
                             feeInfo.subject.map((subject, index) => (
-                                <>
-                                    <div key={index} className="col">
-                                        <h4 key={index}>{subject}</h4>
-                                    </div>
-                                </>
+                                <h4 key={index}>{subject}</h4>
                             ))
                         }
                     </div>
@@ -74,7 +70,7 @@ export default function useBackFeeReceipt(props) {
                 </div>
             </div>
 
-            <div className="card-footer text-muted">
+            <div className="card-footer border-secondary text-muted">
                 Faculty of engineering & technology
             </div>
         </div>
@@ -98,7 +94,7 @@ export default function useBackFeeReceipt(props) {
         <>
             <div className="d-flex justify-content-center">
 
-                <ul>  {listReceipt()}</ul>
+                <ul >  {listReceipt()}</ul>
             </div>
         </>
     )

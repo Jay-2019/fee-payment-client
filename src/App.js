@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { publicRoutes, privateRoutes } from "./routes/index";
 import { NoMatch } from './components/index';
 import Axios from "axios";
+import './App.css';
 
 export default function App() {
   const [student, setStudent] = useState({});
@@ -18,16 +19,20 @@ export default function App() {
 
   return (
     <>
-      < div className="container-fluid">
-        <Router>
-          <Switch>
-            {publicRoutes(setStudent)}
-            {privateRoutes({ student, setStudent })}
-            <Route path="*">
-              <NoMatch />
-            </Route>
-          </Switch>
-        </Router>
+      <div className="App">
+        <header className="App-header">
+          < div className="container-fluid">
+            <Router>
+              <Switch>
+                {publicRoutes(setStudent)}
+                {privateRoutes({ student, setStudent })}
+                <Route path="*">
+                  <NoMatch />
+                </Route>
+              </Switch>
+            </Router>
+          </div>
+        </header>
       </div>
     </>
   );

@@ -3,8 +3,8 @@ import style from "../../style/style.module.css";
 export default function useCourseFeeReceipt(props) {
     const Card = ({ feeInfo, studentInfo, createdAt }) => (
 
-        <div className={`card border-danger bg-info text-center ${style.receiptWidth}`} >
-            <div className="card-header">
+        <div className={`card border-light text-white bg-dark text-center ${style.receiptWidth}`} >
+            <div className="card-header border-secondary">
                 <div className="card-title">
                     <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
                 </div>
@@ -56,8 +56,7 @@ export default function useCourseFeeReceipt(props) {
                     </div>
                 </div>
             </div>
-        
-            <div className="card-footer text-muted">
+            <div className="card-footer border-secondary text-muted">
                 Faculty of engineering & technology
             </div>
         </div>
