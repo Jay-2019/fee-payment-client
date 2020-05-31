@@ -31,7 +31,7 @@ export default function CourseFeeReceipt(props) {
   }, []);
 
   return (
-    <div>
+    <div key={Math.random()}>
       <div>{navigationBar}</div>
       {/* <h4>{title}</h4> */}
       <hr />

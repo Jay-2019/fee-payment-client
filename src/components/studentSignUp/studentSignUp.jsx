@@ -76,7 +76,8 @@ export default function studentSignUp(props) {
           .catch(error => error.message);
         setSubmitting(true);
         resetForm();
-        props.history.push("/studentSignIn");
+
+        setTimeout(() => props.history.push("/studentSignIn"), 1000);
       }}
     >
       <Form>

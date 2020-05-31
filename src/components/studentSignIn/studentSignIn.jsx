@@ -31,8 +31,12 @@ export default function studentSignIn(props) {
           .then(response => {
             localStorage.setItem("token", response.data._id);
             props.setStudent(response.data);
-            return props.history.push(
-              "/studentProfile/" + localStorage.getItem("token")
+            return setTimeout(
+              () =>
+                props.history.push(
+                  "/studentProfile/" + localStorage.getItem("token")
+                ),
+              500
             );
           })
           .catch(error => error.message);

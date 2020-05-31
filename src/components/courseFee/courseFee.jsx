@@ -250,7 +250,14 @@ export default function CourseFee(props) {
         return window.alert("fee submission successful");
       })
       .catch(error => console.log(error.message));
-    props.history.push("/courseFeeReceipt/" + localStorage.getItem("token"));
+
+    setTimeout(
+      () =>
+        props.history.push(
+          "/courseFeeReceipt/" + localStorage.getItem("token")
+        ),
+      1000
+    );
   };
 
   return (

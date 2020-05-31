@@ -238,7 +238,12 @@ export default function BackFee(props) {
       })
       .catch(error => console.log(error.message));
     reSet();
-    props.history.push("/backFeeReceipt/" + localStorage.getItem("token"));
+
+    setTimeout(
+      () =>
+        props.history.push("/backFeeReceipt/" + localStorage.getItem("token")),
+      1000
+    );
   };
 
   return (
@@ -291,6 +296,7 @@ export default function BackFee(props) {
                     onChange={value => setSelectSubject(value)}
                     placeholder="Select one or more Subjects"
                   />
+
                   <br />
                   <div>{table ? showTable : null}</div>
                 </div>
