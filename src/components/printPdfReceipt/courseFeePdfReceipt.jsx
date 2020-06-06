@@ -18,7 +18,7 @@ export default function CourseFeePdfReceipt(props) {
       }
     )
       .then(response => {
-        return setFeeData(response.data);
+       return  setFeeData(response.data);
       })
 
       .catch(error => console.log(error.message));
