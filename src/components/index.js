@@ -7,6 +7,7 @@ import SignOut from "./signOut/signOut";
 import CourseFeeReceipt from "./CourseFeeReceipt/courseFeeReceipt";
 import BackFeeReceipt from "./BackFeeReceipt/BackFeeReceipt";
 import NoMatch from "./noMatch/noMatch";
+import CourseFeePdfReceipt from "./printPdfReceipt/courseFeePdfReceipt";
 export {
     StudentSignUp,
     StudentSignIn,
@@ -15,5 +16,6 @@ export {
     SignOut,
     CourseFeeReceipt,
     BackFeeReceipt,
-    NoMatch
+    NoMatch,
+    CourseFeePdfReceipt
 };

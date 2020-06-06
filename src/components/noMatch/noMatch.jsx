@@ -8,7 +8,7 @@ export default function NoMatch(props) {
   return (
     <>
       <h1>{"NoT Found"}</h1>;
-      <Redirect exact to="/studentSignIn" />;
+      <Redirect exact to="/signOut" />;
     </>
   );
 }

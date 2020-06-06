@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function useNavigationBar(props) {
 
     return (
-        <>
+        <div className="card  bg-dark text-white">
             {/* navbar navbar-dark bg-dark */}
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
                 <b>
@@ -16,9 +16,10 @@ export default function useNavigationBar(props) {
                 <div className=" collapse navbar-collapse" id="navbarNavAltMarkup">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div className=" navbar-nav">
-                        <Link className="nav-item nav-link " to={"/about"} >
+                        <Link className="nav-item nav-link border-light" to={"/about"} >
                             <b>About</b>
                         </Link>
+
                         <Link className="nav-item nav-link " to={"/myProfile/" + localStorage.getItem("token")} >
                             <b>My Profile</b>
                         </Link>
@@ -40,6 +41,6 @@ export default function useNavigationBar(props) {
                     </div>
                 </div>
             </nav>
-        </>
+        </div>
     );
 }

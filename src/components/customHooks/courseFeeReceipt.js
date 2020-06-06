@@ -1,13 +1,26 @@
 import React from "react";
 // import style from "../../style/style.module.css";
+import { Link } from 'react-router-dom';
+import printIcon from '../../assets/index';
+
 export default function useCourseFeeReceipt(props) {
-    const Card = ({ feeInfo, studentInfo, createdAt }) => (
+    const Card = ({ feeId, feeInfo, studentInfo, createdAt }) => (
 
         <>
             <div className={`card border-light text-white bg-dark text-center `} >
                 <div className="card-header border-secondary">
                     <div className="card-title">
-                        <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
+                        <div className='row'>
+                            <div className='col-sm-6'>
+                                <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
+                            </div>
+                            <div className='col-sm-6 '>
+                                <Link to={`/courseFeePdfReceipt/${feeId}`}>
+                                    <img src={printIcon} alt="Print Receipt" />
+                                </Link>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div className="card-body">
@@ -71,6 +84,7 @@ export default function useCourseFeeReceipt(props) {
             const { feeInfo, studentInfo } = data;
             return <Card
                 key={index}
+                feeId={data._id}
                 feeInfo={feeInfo}
                 studentInfo={studentInfo}
                 createdAt={data.createdAt}

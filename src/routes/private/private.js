@@ -5,7 +5,8 @@ import {
     BackFee,
     SignOut,
     CourseFeeReceipt,
-    BackFeeReceipt
+    BackFeeReceipt,
+    CourseFeePdfReceipt
 } from '../../components/index';
 import PrivateRoute from "./privateRoute";
 
@@ -21,6 +22,7 @@ const privateRoutes = (props) => {
         { path: "/backFee/:id", component: BackFee },
         { path: "/signOut", component: SignOut },
         { path: "/about" },
+        { path: "/courseFeePdfReceipt/:id", component: CourseFeePdfReceipt }
     ];
 
     return routes.map((route, index) => {

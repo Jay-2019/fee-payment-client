@@ -32,3 +32,24 @@ export const arrayOfSemester = [
     "Seventh Semester",
     "Eighth Semester"
 ];
+
+export const courseFeeType = [
+    "Study Trip Fee",
+    "Tuition Free",
+    "Laboratory/computer Fee",
+    "Delay Fee",
+    "Security Fee",
+    "Hostel Fee",
+    "Other Charges",
+    "Entrance Fees",
+    "Central Library Fee",
+    "Student Smart Card Fee",
+    "Sports and Cultural Program Fee",
+    "Student Welfare Fee",
+    "Development Fee",
+    "Student Academic Guide",
+    "Examination Fee",
+    "Energy Charges",
+    "Internet Fee",
+    "Total Fee"
+];
