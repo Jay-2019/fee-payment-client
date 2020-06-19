@@ -1,7 +1,6 @@
 import React from "react";
 import { Text, View, StyleSheet } from "@react-pdf/renderer";
 
-
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
@@ -28,27 +27,25 @@ const styles = StyleSheet.create({
   }
 });
 
-const InvoiceTableBody = () => {
-  return (
-    <>
-      <View style={styles.row}>
-        <Text style={styles.description}>Annual Fee Details</Text>
-        <Text style={styles.qty}>Fee</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.description}>Annual Fee Details</Text>
-        <Text style={styles.qty}>Rupees</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.description}>Annual Fee Details</Text>
-        <Text style={styles.qty}>Rupees</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.description}>Annual Fee Details</Text>
-        <Text style={styles.qty}>Rupees</Text>
-      </View>
-    </>
-  );
-};
+const InvoiceTableBody = () => (
+  <>
+    <View style={styles.row}>
+      <Text style={styles.description}>Annual Fee Details</Text>
+      <Text style={styles.qty}>Fee</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.description}>Annual Fee Details</Text>
+      <Text style={styles.qty}>Rupees</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.description}>Annual Fee Details</Text>
+      <Text style={styles.qty}>Rupees</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.description}>Annual Fee Details</Text>
+      <Text style={styles.qty}>Rupees</Text>
+    </View>
+  </>
+);
 
 export default InvoiceTableBody;

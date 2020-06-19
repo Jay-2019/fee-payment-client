@@ -44,62 +44,67 @@ export default function studentSignIn(props) {
     >
       <Form>
         <br />
-        <div className="d-flex justify-content-center">
-          <div className="card text-white bg-dark w-50">
-            <div className="card-header text-center">
-              <h2>Student SignIn</h2>
-            </div>
-            <div className="card-body">
-              <div>
-                <br />
-                <div className="row">
-                  <div className="col">
-                    <Field
-                      name="email"
-                      type="email"
-                      placeholder="student@gmail.com"
-                      className="form-control"
-                    />
+        <div className="d-flex justify-content-center ">
+          <div className="col-sm-12 col-md-6">
+            <div className="card text-white border-light bg-dark">
+              <div className="card-header text-center border-secondary">
+                <h2>Student SignIn</h2>
+              </div>
+              <div className="card-body ">
+                <div>
+                  <br />
+                  <div className="row">
+                    <div className="col">
+                      <Field
+                        name="email"
+                        type="email"
+                        placeholder="student@gmail.com"
+                        className="form-control"
+                      />
 
-                    <ErrorMessage
-                      name="email"
-                      render={msg => (
-                        <div className="alert alert-primary" role="alert">
-                          {msg}
-                        </div>
-                      )}
-                    />
+                      <ErrorMessage
+                        name="email"
+                        render={msg => (
+                          <div className="alert alert-primary" role="alert">
+                            {msg}
+                          </div>
+                        )}
+                      />
+                    </div>
                   </div>
-                </div>
-                <br />
-                <div className="row">
-                  <div className="col">
-                    <Field
-                      type="password"
-                      name="password"
-                      placeholder="password"
-                      className="form-control"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      render={msg => (
-                        <div className="alert alert-primary" role="alert">
-                          {msg}
-                        </div>
-                      )}
-                    />
+                  <br />
+                  <div className="row">
+                    <div className="col">
+                      <Field
+                        type="password"
+                        name="password"
+                        placeholder="password"
+                        className="form-control"
+                      />
+                      <ErrorMessage
+                        name="password"
+                        render={msg => (
+                          <div className="alert alert-primary" role="alert">
+                            {msg}
+                          </div>
+                        )}
+                      />
+                    </div>
                   </div>
+                  <br />
                 </div>
-                <br />
+                <div className="text-center">
+                  <button
+                    type="submit"
+                    className="btn  btn-outline-secondary btn-block"
+                  >
+                    <b>{" Sign In "}</b>
+                  </button>
+                </div>
               </div>
-              <div className="text-center">
-                <button type="submit" className="btn btn-primary ">
-                  Sign In{" "}
-                </button>
+              <div className="card-footer border-secondary text-center text-muted">
+                Faculty of engineering & technology
               </div>
-            </div>
-            <div className="card-footer text-center text-muted">
-              Faculty of engineering & technology
             </div>
           </div>
         </div>

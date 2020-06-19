@@ -21,7 +21,7 @@ export default function App() {
     <>
       <div className="App">
         <header className="App-header">
-          < div className="container-fluid">
+          < div className="container-fluid  h-100">
             <Router>
               <Switch>
                 {publicRoutes(setStudent)}

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import Receipt from "./receipt";
+import MyReceipt from "./receipt";
 import { useNavigationBar } from "../../components/customHooks/index";
 
 export default function CourseFeePdfReceipt(props) {
-  const navigationBar = useNavigationBar();
-  
+  const navigationBar = useNavigationBar(
+    `${props.parentProps.student.firstName}
+    ${props.parentProps.student.lastName}`
+  );
+
   const [feeData, setFeeData] = useState({});
 
   useEffect(() => {
@@ -18,7 +21,7 @@ export default function CourseFeePdfReceipt(props) {
       }
     )
       .then(response => {
-        return setFeeData(response.data);
+        setFeeData(response.data);
       })
 
       .catch(error => console.log(error.message));
@@ -29,10 +32,10 @@ export default function CourseFeePdfReceipt(props) {
   }, [props.match.params.id]);
 
   return (
-    <>
+    <div className="col-sm-12">
       {navigationBar}
       <hr />
-      <Receipt />
-    </>
+      <MyReceipt />
+    </div>
   );
 }

@@ -20,3 +20,11 @@
 .backFeeTitle {
   color: #dc3545;
 }
+
+.alert {
+  position: relative;
+  padding: .55rem 1.25rem;
+  margin-top: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}

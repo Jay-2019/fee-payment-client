@@ -4,18 +4,22 @@ import InvoiceTableBody from "./body";
 
 import {
   PDFDownloadLink,
-  PDFViewer,
+  // PDFViewer,
+  // BlobProvider,
   // ReactPDF,
   Document,
   Page,
   Text,
   StyleSheet,
-  Font,
+  // Font,
   View
   // PDFRenderer
 } from "@react-pdf/renderer";
-// import InvoiceTableHeader from "./header";
-// import InvoiceTableBody from "./body";
+
+// Font.register({
+//   family: "Oswald",
+//   src: " https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf"
+// });
 
 const styles = StyleSheet.create({
   body: {
@@ -32,12 +36,12 @@ const styles = StyleSheet.create({
   title1: {
     fontSize: 16,
     textAlign: "center",
-    fontFamily: "Oswald"
+    // fontFamily: "Roboto"
   },
   title2: {
     fontSize: 16,
     textAlign: "center",
-    fontFamily: "Oswald",
+    // fontFamily: "Roboto",
     marginTop: 5
   },
   author: {
@@ -47,13 +51,13 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 12,
-    fontFamily: "Oswald"
+    // fontFamily: "Roboto"
   },
   text: {
     margin: 12,
     fontSize: 14,
     textAlign: "justify",
-    fontFamily: "Times-Roman"
+    // fontFamily: "Times-Roman"
   },
   // page: {
   //   flexDirection: "column",
@@ -151,53 +155,102 @@ const styles = StyleSheet.create({
   }
 });
 
-Font.register({
-  family: "Oswald",
-  src: "https://fonts.gstatic.com/s/oswald/v13/Y_TKV6o8WovbUd3m_X9aAA.ttf"
-});
+const Receipt = () => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <Text style={styles.title1}>
+        Mahatma Gandhi Chitrakoot Gramodaya Vishwavidyalay Chitrakoot,
+      </Text>
+      <Text style={styles.title2}>Satna, Madhya Pradesh</Text>
 
-export default function Receipt() {
-  const MyReceipt = () => (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <Text style={styles.title1}>
-          Mahatma Gandhi Chitrakoot Gramodaya Vishwavidyalay Chitrakoot,
+      <View style={styles.view}>
+        <Text style={styles.subtitle}>Date: someThing </Text>
+        <Text style={styles.subtitle}>Name: Jay Prakash Maurya</Text>
+        <Text style={styles.subtitle}>Father Name: Father Maurya</Text>
+        <Text style={styles.subtitle}>Branch: B.Tech I.T.</Text>
+        <Text style={styles.subtitle}>Year: First Year</Text>
+        <Text> </Text>
+      </View>
+
+      <View style={styles.tableContainer}>
+        <InvoiceTableHeader />
+        <InvoiceTableBody />
+      </View>
+
+      <Text style={styles.note}>
+        {"Submit:- M.G.C.G.V.V. Chitrakoot Fee Account Number 208"}
+      </Text>
+
+      <View style={styles.footer}>
+        <Text style={styles.f1}>
+          Signature and seal of the head of department
         </Text>
-        <Text style={styles.title2}>Satna, Madhya Pradesh</Text>
+        <Text style={styles.f2}>Student's signature</Text>
+      </View>
+    </Page>
+  </Document>
+);
 
-        <View style={styles.view}>
-          <Text style={styles.subtitle}>Date: someThing </Text>
-          <Text style={styles.subtitle}>Name: Jay Prakash Maurya</Text>
-          <Text style={styles.subtitle}>Father Name: Father Maurya</Text>
-          <Text style={styles.subtitle}>Branch: B.Tech I.T.</Text>
-          <Text style={styles.subtitle}>Year: First Year</Text>
-          <Text> </Text>
-        </View>
+const MyReceipt = () => (
+  <>
+    {/* <PDFViewer height="600" width="100%">
+      <Receipt />
+    </PDFViewer> */}
 
-        <View style={styles.tableContainer}>
-          <InvoiceTableHeader />
-          <InvoiceTableBody />
-        </View>
+    <PDFDownloadLink document={<Receipt />} fileName="courseFeeReceipt.pdf">
+      {({ blob, url, loading, error }) =>
+        loading ? (
+          <h2> Loading document...</h2>
+        ) : (
+          <button className="btn btn-outline-danger btn-block">
+            {"Download Invoice Now"}
+          </button>
+        )
+      }
+    </PDFDownloadLink>
+  </>
+);
 
-        <Text style={styles.note}>
-          {"Submit:- M.G.C.G.V.V. Chitrakoot Fee Account Number 208"}
-        </Text>
+export default MyReceipt;
 
-        <View style={styles.footer}>
-          <Text style={styles.f1}>
-            Signature and seal of the head of department
-          </Text>
-          <Text style={styles.f2}>Student's signature</Text>
-        </View>
-      </Page>
-    </Document>
-  );
+/* <PDFViewer height="600" width="100%">
+<Receipt />
+</PDFViewer> */
 
-  return (
-    <>
-      <PDFViewer width="100%" height="600">
-        <MyReceipt />
-      </PDFViewer>
-    </>
-  );
-}
+// const MyReceipt = () => (
+//   <Document>
+//     <Page style={styles.page} size="A4">
+//       <Text style={styles.title1}>
+//         Mahatma Gandhi Chitrakoot Gramodaya Vishwavidyalay Chitrakoot,
+//       </Text>
+//       <Text style={styles.title2}>Satna, Madhya Pradesh</Text>
+
+//          <View style={styles.view}>
+//            <Text style={styles.subtitle}>Date: someThing </Text>
+//            <Text style={styles.subtitle}>Name: Jay Prakash Maurya</Text>
+//            <Text style={styles.subtitle}>Father Name: Father Maurya</Text>
+//            <Text style={styles.subtitle}>Branch: B.Tech I.T.</Text>
+//            <Text style={styles.subtitle}>Year: First Year</Text>
+//            <Text> </Text>
+//          </View>
+
+//          <View style={styles.tableContainer}>
+//            <InvoiceTableHeader />
+//            <InvoiceTableBody />
+//          </View>
+
+//          <Text style={styles.note}>
+//            {"Submit:- M.G.C.G.V.V. Chitrakoot Fee Account Number 208"}
+//          </Text>
+
+//          <View style={styles.footer}>
+//            <Text style={styles.f1}>
+//              Signature and seal of the head of department
+//            </Text>
+//            <Text style={styles.f2}>Student's signature</Text>
+//          </View>
+//     </Page>
+//   </Document>
+// );
+
+// export default MyReceipt;
