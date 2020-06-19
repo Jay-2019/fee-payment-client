@@ -70,7 +70,9 @@ export default function BackFee(props) {
   );
 
   const checkDueDate = dueDateOfSemester => {
-    if (dueDateOfSemester < new Date().toLocaleString("en-GB")) {
+    if (
+      dueDateOfSemester < new Date(Date.now()).toISOString().substring(0, 10)
+    ) {
       return backFeeType.delayFee;
     }
     return 0;
@@ -164,14 +166,16 @@ export default function BackFee(props) {
         eighthSemester
       } = dueDate.data;
       setDueDate({
-        firstSemester: new Date(firstSemester).toLocaleString("en-GB"),
-        secondSemester: new Date(secondSemester).toLocaleString("en-GB"),
-        thirdSemester: new Date(thirdSemester).toLocaleString("en-GB"),
-        fourthSemester: new Date(fourthSemester).toLocaleString("en-GB"),
-        fifthSemester: new Date(fifthSemester).toLocaleString("en-GB"),
-        sixthSemester: new Date(sixthSemester).toLocaleString("en-GB"),
-        seventhSemester: new Date(seventhSemester).toLocaleString("en-GB"),
-        eighthSemester: new Date(eighthSemester).toLocaleString("en-GB")
+        firstSemester: new Date(firstSemester).toISOString().substring(0, 10),
+        secondSemester: new Date(secondSemester).toISOString().substring(0, 10),
+        thirdSemester: new Date(thirdSemester).toISOString().substring(0, 10),
+        fourthSemester: new Date(fourthSemester).toISOString().substring(0, 10),
+        fifthSemester: new Date(fifthSemester).toISOString().substring(0, 10),
+        sixthSemester: new Date(sixthSemester).toISOString().substring(0, 10),
+        seventhSemester: new Date(seventhSemester)
+          .toISOString()
+          .substring(0, 10),
+        eighthSemester: new Date(eighthSemester).toISOString().substring(0, 10)
       });
     };
     fetchData();

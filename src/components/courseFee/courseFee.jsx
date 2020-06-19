@@ -97,7 +97,7 @@ export default function CourseFee(props) {
   };
 
   const checkDueDate = yearOfDueDate => {
-    if (yearOfDueDate < new Date().toLocaleString("en-GB")) {
+    if (yearOfDueDate < new Date(Date.now()).toISOString().substring(0, 10)) {
       return delayFeeFine;
     }
     return 0;
@@ -180,10 +180,10 @@ export default function CourseFee(props) {
       ]);
       const { firstYear, secondYear, thirdYear, fourthYear } = dueDate.data;
       setDueDate({
-        firstYear: new Date(firstYear).toLocaleString("en-GB"),
-        secondYear: new Date(secondYear).toLocaleString("en-GB"),
-        thirdYear: new Date(thirdYear).toLocaleString("en-GB"),
-        fourthYear: new Date(fourthYear).toLocaleString("en-GB")
+        firstYear: new Date(firstYear).toISOString().substring(0, 10),
+        secondYear: new Date(secondYear).toISOString().substring(0, 10),
+        thirdYear: new Date(thirdYear).toISOString().substring(0, 10),
+        fourthYear: new Date(fourthYear).toISOString().substring(0, 10)
       });
       hideOption(validFee.data);
     };
