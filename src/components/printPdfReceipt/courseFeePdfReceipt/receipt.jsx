@@ -2,7 +2,7 @@ import React from "react";
 import { InvoiceTableHeader, InvoiceTableBody } from "./index";
 import {
   PDFDownloadLink,
-  // PDFViewer,
+  PDFViewer,
   // BlobProvider,
   // ReactPDF,
   Document,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     textAlign: "left"
   },
   footer: {
-    marginTop: 60,
+    marginTop: 50,
     flexDirection: "row",
     alignItems: "center",
     height: 24,
@@ -215,11 +215,11 @@ const Receipt = value => (
 
 const MyReceipt = props => (
   <>
-    {/* {props.value ? (
-    <PDFViewer height="600" width="100%">
-      <Receipt value={props.value} />
-    </PDFViewer>
-  ) : null} */}
+    {props.value ? (
+      <PDFViewer height="600" width="100%">
+        <Receipt value={props.value} />
+      </PDFViewer>
+    ) : null}
 
     {props.value ? (
       <PDFDownloadLink

@@ -2,7 +2,7 @@ import React from "react";
 import { InvoiceTableHeader, InvoiceTableBody } from "./index";
 import {
   PDFDownloadLink,
-  // PDFViewer,
+  PDFViewer,
   // BlobProvider,
   // ReactPDF,
   Document,
@@ -217,11 +217,11 @@ const Receipt = value => (
 
 const MyReceipt = props => (
   <>
-    {/* {props.value ? (
+    {props.value ? (
     <PDFViewer height="600" width="100%">
       <Receipt value={props.value} />
     </PDFViewer>
-  ) : null} */}
+  ) : null}
 
     {props.value ? (
       <PDFDownloadLink

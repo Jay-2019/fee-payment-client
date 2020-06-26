@@ -35,8 +35,8 @@ export const arrayOfSemester = [
 
 export const courseFeeType = [
     "Study Trip Fee",
-    "Tuition Free",
-    "Laboratory/computer Fee",
+    "Tuition Fee",
+    "Laboratory/Computer Fee",
     "Delay Fee",
     "Security Fee",
     "Hostel Fee",
