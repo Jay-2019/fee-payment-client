@@ -23,12 +23,48 @@ export default function BackFee(props) {
     subject: [],
     semester: "",
     branch: "",
+    examMode: [],
     backFee: 0,
     delayFee: 0,
     totalFee: 0
   });
 
+  const [examMode, setExamMode] = useState([]);
   const [table, setTable] = useState(false);
+
+  const handleExamMode = e => {
+    const { value } = e.target;
+    if (!examMode.includes(value)) return setExamMode([...examMode, value]);
+    if (examMode.includes(value)) {
+      setExamMode(examMode.filter(data => data !== value));
+    }
+  };
+
+  const showExamMode = (
+    <div className="row">
+      <div className="col ">
+        <input
+          className="form-check-input btn btn-outline-danger"
+          type="checkbox"
+          value="Internal"
+          onChange={handleExamMode}
+          checked={examMode.includes("Internal")}
+        />
+        <label className="form-check-label">{"Internal"}</label>
+      </div>
+
+      <div className="col">
+        <input
+          className="form-check-input btn"
+          type="checkbox"
+          value="External"
+          onChange={handleExamMode}
+          checked={examMode.includes("External")}
+        />
+        <label className="form-check-label">{"External"}</label>
+      </div>
+    </div>
+  );
 
   const showTable = (
     <div className="card-title">
@@ -115,6 +151,7 @@ export default function BackFee(props) {
         subject: selectSubject,
         semester: semester,
         branch: branch,
+        examMode: examMode,
         backFee: (backFeeType.totalFee * selectSubject.length).toFixed(2),
         delayFee: feeInfo.delayFee.toFixed(2),
         totalFee: feeInfo.totalFee.toFixed(2)
@@ -126,6 +163,7 @@ export default function BackFee(props) {
   const handleSemesterChange = e => {
     setSemester(e.target.value);
   };
+
   const handleBranchChange = e => {
     setBranch(e.target.value);
   };
@@ -139,7 +177,7 @@ export default function BackFee(props) {
   useEffect(() => {
     let source = Axios.CancelToken.source();
 
-    const fetchData = async () => {
+    (async () => {
       const [backFeeType, dueDate] = [
         await Axios.get(
           `http://localhost:4000/feePaymentDB/getBackFeeType/${idOfBackFeeType}`,
@@ -177,8 +215,7 @@ export default function BackFee(props) {
           .substring(0, 10),
         eighthSemester: new Date(eighthSemester).toISOString().substring(0, 10)
       });
-    };
-    fetchData();
+    })();
 
     return () => {
       source.cancel("Cancelling in cleanup");
@@ -217,9 +254,13 @@ export default function BackFee(props) {
       setSemester();
       setBranch();
       setSelectSubject();
-      return window.alert("please select valid information");
+      return window.alert("Please select valid information");
     }
 
+    if (examMode.length === 0) {
+      return window.alert("Please select valid Exam Mode");
+    }
+    console.log(examMode);
     const data = {
       feeInfo: feeInfo,
       studentInfo: {
@@ -238,16 +279,14 @@ export default function BackFee(props) {
       data
     )
       .then(response => {
-        return window.alert("fee submission successful");
+        if (response.status === 200);
+        window.alert("Congratulations! Fee Submission Successful");
+        return props.history.push(
+          "/backFeeReceipt/" + localStorage.getItem("token")
+        );
       })
       .catch(error => console.log(error.message));
     reSet();
-
-    setTimeout(
-      () =>
-        props.history.push("/backFeeReceipt/" + localStorage.getItem("token")),
-      1000
-    );
   };
 
   return (
@@ -293,15 +332,15 @@ export default function BackFee(props) {
                     ))}
                   </select>
                   <hr />
+                  {showExamMode}
+                  <hr />
                   <Multiselect
-                    // busy
                     data={subject}
                     autoFocus={false}
                     onChange={value => setSelectSubject(value)}
                     placeholder="Select one or more Subjects"
                   />
-
-                  <br />
+                  <hr />
                   <div>{table ? showTable : null}</div>
                 </div>
               </div>
