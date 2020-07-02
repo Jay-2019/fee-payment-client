@@ -31,6 +31,7 @@ export default function useBackFeeReceipt(props) {
                                 <th>
                                     {`${studentInfo.branch}`}
                                 </th>
+
                             </tr>
                             <tr>
                                 <th>
@@ -47,6 +48,21 @@ export default function useBackFeeReceipt(props) {
 
                                 </td>
                             </tr>
+
+                            <tr >
+                                <th scope="row">
+                                    <b>Exam Mode</b>
+                                </th>
+                                <td>
+                                    <b>{
+                                        feeInfo.examMode.map((examMode, index) => (
+                                            <p key={index}>{examMode}</p>
+                                        ))
+                                    }
+                                    </b>
+                                </td>
+                            </tr>
+
                             <tr >
                                 <th scope="row">
                                     <b>Course Fee</b>

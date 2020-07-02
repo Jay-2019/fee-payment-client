@@ -3,10 +3,8 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
 import {
-  arrayOfAge,
   arrayOfBranch,
   arrayOfGender,
-  arrayOfSemester,
   arrayOfAdmissionSession
 } from "../constant";
 export default function studentSignUp(props) {
@@ -16,7 +14,7 @@ export default function studentSignUp(props) {
         firstName: "",
         lastName: "",
         email: "",
-        age: "",
+        rollNo: "",
         gender: "",
         branch: "",
         fatherName: "",
@@ -28,17 +26,20 @@ export default function studentSignUp(props) {
       }}
       validationSchema={Yup.object({
         firstName: Yup.string()
-          .min(3, "minium 3 characters allow")
+          .min(3, "minimum 3 characters allow")
           .max(15, "maximum 15 characters allow")
           .required("Required"),
         lastName: Yup.string()
-          .max(20, "Must be 20 characters or less")
+          .min(3, "minimum 3 characters allow")
+          .max(20, "maximum 20 characters allow")
           .required("Required"),
         email: Yup.string()
           .email("Invalid email address")
           .required("Required"),
-        age: Yup.number()
-          .oneOf(arrayOfAge, "Invalid Age")
+        rollNumber: Yup.string()
+          .min(6, "Roll No must be minimum 6 Digit (0-9)")
+          .max(6, "Roll No must be maximum 6 Digit (0-9)")
+          .matches(/^[-+]?[0-9]+$/, "Roll no contain only digit 0-9.")
           .required("Required"),
         gender: Yup.string()
           .oneOf(arrayOfGender, "Invalid Gender")
@@ -53,9 +54,13 @@ export default function studentSignUp(props) {
         admissionSession: Yup.string()
           .oneOf(arrayOfAdmissionSession, "Invalid Admission Session")
           .required("Required"),
-        semester: Yup.string()
-          .oneOf(arrayOfSemester, "Invalid Branch")
-          .required("Required"),
+        enrollmentNumber: Yup.string()
+          .min(9, "minimum 9 characters allow")
+          .max(9, "maximum 9 characters allow")
+          .matches(
+            /([0-9]?[/-])/,
+            "Enrollment Number format must be same as which is in your document.   e.g: 16/06-065"
+          ),
         password: Yup.string()
           .min(4, "Password is too short - should be 4 characters minimum.")
           .max(8, "maximum 8 characters allow")
@@ -71,24 +76,24 @@ export default function studentSignUp(props) {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         Axios.post("http://localhost:4000/feePaymentDB/studentSignUp", values)
           .then(response => {
-            return window.alert("Congratulations ");
+            if (response.status === 200);
+            window.alert("Congratulations! Sign-Up successful ");
+            return props.history.push("/studentSignIn");
           })
           .catch(error => error.message);
         setSubmitting(true);
         resetForm();
-
-        setTimeout(() => props.history.push("/studentSignIn"), 1000);
       }}
     >
       <Form>
         <br />
         <div className="d-flex justify-content-center">
-          <div className="card text-white bg-dark w-75 ">
-            <div className="card-header text-center">
-              <h2>Student SignUp</h2>
-            </div>
-            <div className="card-body">
-              <div>
+          <div className="col-sm-12 col-md-8">
+            <div className="card text-white border-light bg-dark ">
+              <div className="card-header border-secondary text-danger text-center">
+                <h2>Student SignUp</h2>
+              </div>
+              <div className="card-body">
                 <div className="row">
                   <div className="col">
                     <Field
@@ -101,7 +106,6 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="firstName" />
                   </div>
                   <div className="col">
-                    {" "}
                     <Field
                       name="lastName"
                       type="text"
@@ -111,20 +115,18 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="lastName" />
                   </div>
                 </div>
-                <br />
+
+                <hr />
                 <div className="row">
                   <div className="col">
-                    <Field as="select" name="age" className="custom-select">
-                      <option disabled value="">
-                        Age...
-                      </option>
-                      {arrayOfAge.map((age, index) => (
-                        <option key={index} value={age}>
-                          {age}
-                        </option>
-                      ))}
-                    </Field>
-                    <ErrorMessage name="age" />
+                    <Field
+                      name="rollNumber"
+                      type="text"
+                      placeholder="Roll Number"
+                      className="form-control"
+                    />
+
+                    <ErrorMessage name="rollNumber" />
                   </div>
                   <div className="col">
                     <Field as="select" name="gender" className="custom-select">
@@ -140,7 +142,8 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="gender" />
                   </div>
                 </div>
-                <br />
+
+                <hr />
                 <div className="row">
                   <div className="col">
                     <Field as="select" name="branch" className="custom-select">
@@ -157,23 +160,17 @@ export default function studentSignUp(props) {
                   </div>
                   <div className="col">
                     <Field
-                      as="select"
-                      name="semester"
-                      className="custom-select"
-                    >
-                      <option disabled value="">
-                        Semester...
-                      </option>
-                      {arrayOfSemester.map((semester, index) => (
-                        <option key={index} value={semester}>
-                          {semester}
-                        </option>
-                      ))}
-                    </Field>
-                    <ErrorMessage name="semester" />
+                      name="enrollmentNumber"
+                      type="string"
+                      placeholder="Enrollment Number e.g:16/06-065 (Optional)"
+                      className="form-control"
+                    />
+
+                    <ErrorMessage name="enrollmentNumber" />
                   </div>
                 </div>
-                <br />
+
+                <hr />
                 <div className="row">
                   <div className="col">
                     <Field
@@ -204,7 +201,8 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="admissionSession" />
                   </div>
                 </div>
-                <br />
+
+                <hr />
                 <div className="row">
                   <div className="col text-left">
                     <Field
@@ -220,7 +218,7 @@ export default function studentSignUp(props) {
                   </div>
                 </div>
 
-                <br />
+                <hr />
                 <div className="row">
                   <div className="col">
                     <Field
@@ -232,7 +230,8 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="password" />
                   </div>
                 </div>
-                <br />
+
+                <hr />
                 <div className="row">
                   <div className="col">
                     <Field
@@ -245,7 +244,7 @@ export default function studentSignUp(props) {
                   </div>
                 </div>
 
-                <br />
+                <hr />
                 <div className="row">
                   <div className="col text-left">
                     <Field type="checkbox" name="acceptTerms" /> &nbsp;
@@ -256,18 +255,30 @@ export default function studentSignUp(props) {
                     <ErrorMessage name="acceptTerms" />
                   </div>
                 </div>
-                <br />
+
+                <hr />
                 <div className="row">
                   <div className="col text-center">
-                    <button type="submit" className="btn btn-primary">
-                      Sign Up
+                    <button
+                      type="submit"
+                      className="btn  btn-outline-secondary btn-block"
+                    >
+                      <b> Sign Up</b>
                     </button>
                   </div>
                 </div>
+                <div className="text-center">
+                  <small id="note" className="form-text text-muted">
+                    {"If You Are Lost Here Back To"}
+                    <a href="/studentSignIn">
+                      <b>{" Sign-In "}</b>
+                    </a>
+                  </small>
+                </div>
               </div>
-            </div>
-            <div className="card-footer text-center ">
-              Faculty of engineering & technology
+              <div className="card-footer border-secondary text-center ">
+                Faculty of engineering & technology
+              </div>
             </div>
           </div>
         </div>

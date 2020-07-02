@@ -218,10 +218,27 @@ const Receipt = value => (
 const MyReceipt = props => (
   <>
     {props.value ? (
-    <PDFViewer height="600" width="100%">
-      <Receipt value={props.value} />
-    </PDFViewer>
-  ) : null}
+      <PDFDownloadLink
+        document={<Receipt value={props.value} />}
+        fileName="backFeeReceipt.pdf"
+      >
+        {({ blob, url, loading, error }) =>
+          loading ? (
+            <h2> Loading document...</h2>
+          ) : (
+            <button className="btn btn-outline-danger btn-block">
+              {"Download Invoice Now"}
+            </button>
+          )
+        }
+      </PDFDownloadLink>
+    ) : null}
+    
+    {props.value ? (
+      <PDFViewer height="600" width="100%">
+        <Receipt value={props.value} />
+      </PDFViewer>
+    ) : null}
 
     {props.value ? (
       <PDFDownloadLink

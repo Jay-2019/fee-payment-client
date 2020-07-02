@@ -12,7 +12,7 @@ export default function useCourseFeeReceipt(props) {
                     <div className="card-title">
                         <div className='row'>
                             <div className='col-sm-6'>
-                                <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
+                                <h5>{new Date(createdAt).toLocaleDateString("en-GB")}</h5>
                             </div>
                             <div className='col-sm-6 '>
                                 <Link to={`/courseFeePdfReceipt/${feeId}`}>
@@ -26,46 +26,55 @@ export default function useCourseFeeReceipt(props) {
                 <div className="card-body">
                     <div className="row">
                         <div className="col">
-                            <h4>{`${studentInfo.firstName} ${studentInfo.lastName}`}</h4>
+                            <h5>{`${studentInfo.firstName} ${studentInfo.lastName}`}</h5>
                         </div>
                         <div className="col">
-                            <h4>{`${studentInfo.branch}`}</h4>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="row">
-                        <div className="col">
-                            <h4>Year</h4>
-                        </div>
-                        <div className="col">
-                            <h4>{feeInfo.year}</h4>
+                            <h5>{`${studentInfo.branch}`}</h5>
                         </div>
                     </div>
                     <hr />
                     <div className="row">
                         <div className="col">
-                            <h4>Course Fee</h4>
+                            <h5>Year</h5>
                         </div>
                         <div className="col">
-                            <h4>{feeInfo.courseFee}</h4>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="row">
-                        <div className="col">
-                            <h4>Delay Fee</h4>
-                        </div>
-                        <div className="col">
-                            <h4>{feeInfo.delayFee}</h4>
+                            <h5>{feeInfo.year}</h5>
                         </div>
                     </div>
                     <hr />
                     <div className="row">
                         <div className="col">
-                            <h4>Total Fee</h4>
+                            <h5>Fee Mode</h5>
                         </div>
                         <div className="col">
-                            <h4>{feeInfo.totalFee}</h4>
+                            <h5>{feeInfo.feeMode}</h5>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                        <div className="col">
+                            <h5>Course Fee</h5>
+                        </div>
+                        <div className="col">
+                            <h5>{feeInfo.courseFee}</h5>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                        <div className="col">
+                            <h5>Delay Fee</h5>
+                        </div>
+                        <div className="col">
+                            <h5>{feeInfo.delayFee}</h5>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                        <div className="col">
+                            <h5>Total Fee</h5>
+                        </div>
+                        <div className="col">
+                            <h5>{feeInfo.totalFee}</h5>
 
                         </div>
                     </div>

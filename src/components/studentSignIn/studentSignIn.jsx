@@ -35,7 +35,7 @@ export default function StudentSignIn(props) {
   };
 
   useEffect(() => {
-    handleCaptcha(); 
+    handleCaptcha();
   }, []);
 
   return (
@@ -66,15 +66,13 @@ export default function StudentSignIn(props) {
             values.password
         )
           .then(response => {
-            localStorage.setItem("token", response.data._id);
-            props.setStudent(response.data);
-            return setTimeout(
-              () =>
-                props.history.push(
-                  "/studentProfile/" + localStorage.getItem("token")
-                ),
-              500
-            );
+            if (response.status === 200) {
+              localStorage.setItem("token", response.data._id);
+              props.setStudent(response.data);
+              return props.history.push(
+                "/studentProfile/" + localStorage.getItem("token")
+              );
+            }
           })
           .catch(error => error.message);
       }}
@@ -84,12 +82,12 @@ export default function StudentSignIn(props) {
         <div className="d-flex justify-content-center ">
           <div className="col-sm-12 col-md-6">
             <div className="card text-white border-light bg-dark">
-              <div className="card-header text-center border-secondary">
+              <div className="card-header text-warning text-center border-secondary">
                 <h2>Student SignIn</h2>
               </div>
               <div className="card-body ">
                 <div>
-                  <br />
+                  <hr />
                   <div className="row">
                     <div className="col">
                       <Field
@@ -109,7 +107,7 @@ export default function StudentSignIn(props) {
                       />
                     </div>
                   </div>
-                  <br />
+                  <hr />
                   <div className="row">
                     <div className="col">
                       <Field
@@ -129,7 +127,7 @@ export default function StudentSignIn(props) {
                     </div>
                   </div>
 
-                  <br />
+                  <hr />
                   <div className="row">
                     <div className="col text-center">
                       <canvas
@@ -140,7 +138,7 @@ export default function StudentSignIn(props) {
                       ></canvas>
                     </div>
                   </div>
-                  <br />
+                  <hr />
 
                   <div className="row">
                     <div className="col">
@@ -163,7 +161,7 @@ export default function StudentSignIn(props) {
                       />
                     </div>
                   </div>
-                  <br />
+                  <hr />
                 </div>
                 <div className="text-center">
                   <button

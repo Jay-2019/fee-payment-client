@@ -40,10 +40,10 @@ export default function StudentProfile(props) {
 
               <div className="row">
                 <div className="col-sm-12 col-md-6">
-                  <small className="text-muted">Semester </small>
+                  <small className="text-muted">Roll No. </small>
                   <br />
                   <i>
-                    <b>{student.semester}</b>
+                    <b>{student.rollNumber}</b>
                   </i>
                 </div>
                 <div className="col-sm-12 col-md-6">
@@ -58,10 +58,10 @@ export default function StudentProfile(props) {
 
               <div className="row">
                 <div className="col-sm-12 col-md-6">
-                  <small className="text-muted">Age </small>
+                  <small className="text-muted">Enrollment No. </small>
                   <br />
                   <i>
-                    <b> {student.age}</b>
+                    <b> {student.enrollmentNumber}</b>
                   </i>
                 </div>
                 <div className="col-sm-12 col-md-6">
@@ -103,4 +103,4 @@ export default function StudentProfile(props) {
       </div>
     </StrictMode>
   );
-};
+}
