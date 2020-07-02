@@ -4,6 +4,7 @@ import Axios from "axios";
 import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
+import { calculateSemesterFeeType, mapSelectedYearWithId } from "./helper";
 
 const courseFeeDueDateId = "5ec0ec3d70f1cc05e0d9f6d8";
 
@@ -16,13 +17,15 @@ export default function CourseFee(props) {
     fourthYear: ""
   });
 
+  const [feeMode, setFeeMode] = useState("");
   const [table, setTable] = useState(false);
   const [idOfSelectedYear, setIdOfSelectedYear] = useState("");
-  const [courseFeeType, setCourseFeeType] = useState({});
+  const [feeTypeBasedOnFeeMode, setFeeTypeBasedOnFeeMode] = useState({});
   const [fee, setFee] = useState(0);
   const [delayFeeFine, setDelayFeeFine] = useState(0);
   const [feeInfo, setFeeInfo] = useState({
     year: "",
+    feeMode: "",
     courseFee: 0,
     delayFee: 0,
     totalFee: 0
@@ -32,6 +35,42 @@ export default function CourseFee(props) {
   const [hideSecondYear, setHideSecondYear] = useState(false);
   const [hideThirdYear, setHideThirdYear] = useState(false);
   const [hideFourthYear, setHideFourthYear] = useState(false);
+
+  const handleFeeModeChange = e => {
+    const { value } = e.target;
+    if (value !== "") setFeeMode(value);
+  };
+
+  const showFeeModeOptions = (
+    <div className="row">
+      <div className="col ">
+        <div className="form-check">
+          <input
+            className="form-check-input btn"
+            type="radio"
+            name="Year Wise"
+            value="Year Wise"
+            onChange={handleFeeModeChange}
+            checked={feeMode === "Year Wise"}
+          />
+          <label className="form-check-label">Year Wise</label>
+        </div>
+      </div>
+      <div className="col ">
+        <div className="form-check">
+          <input
+            className="form-check-input btn"
+            type="radio"
+            name="Semester Wise"
+            value="Semester Wise"
+            onChange={handleFeeModeChange}
+            checked={feeMode === "Semester Wise"}
+          />
+          <label className="form-check-label">Semester Wise</label>
+        </div>
+      </div>
+    </div>
+  );
 
   const showTable = (
     <div className="card-title">
@@ -74,28 +113,6 @@ export default function CourseFee(props) {
     </div>
   );
 
-  //map selected year of feeType with Id
-  const mapSelectedYearWithId = year => {
-    let idOfSelectedYear;
-    switch (year) {
-      case "First Year":
-        idOfSelectedYear = "5ec13f8678ea5a2e0c1a6bfe";
-        break;
-      case "Second Year":
-        idOfSelectedYear = "5ec13ffc78ea5a2e0c1a6bff";
-        break;
-      case "Third Year":
-        idOfSelectedYear = "5ec1401078ea5a2e0c1a6c00";
-        break;
-      case "Fourth Year":
-        idOfSelectedYear = "5ec1402178ea5a2e0c1a6c01";
-        break;
-      default:
-        return null;
-    }
-    setIdOfSelectedYear(idOfSelectedYear);
-  };
-
   const checkDueDate = yearOfDueDate => {
     if (yearOfDueDate < new Date(Date.now()).toISOString().substring(0, 10)) {
       return delayFeeFine;
@@ -103,7 +120,7 @@ export default function CourseFee(props) {
     return 0;
   };
 
-  const calculateFee = idOfSelectedYear => {
+  const calculateYearWiseFee = idOfSelectedYear => {
     feeInfo.courseFee = fee;
     switch (idOfSelectedYear) {
       case "5ec13f8678ea5a2e0c1a6bfe":
@@ -125,18 +142,34 @@ export default function CourseFee(props) {
     if (fee && delayFeeFine) {
       setFeeInfo({
         year: feeInfo.year,
+        feeMode: feeMode,
         courseFee: feeInfo.courseFee,
         delayFee: feeInfo.delayFee,
         totalFee: fee + feeInfo.delayFee
       });
     }
-    return setTable(true);
+    setTable(true);
+  };
+
+  const calculateSemesterWiseFee = () => {
+    feeInfo.courseFee = fee / 2;
+
+    if (fee && delayFeeFine) {
+      setFeeInfo({
+        year: feeInfo.year,
+        feeMode: feeMode,
+        courseFee: feeInfo.courseFee,
+        delayFee: delayFeeFine,
+        totalFee: fee / 2 + delayFeeFine
+      });
+      setTable(true);
+    }
   };
 
   const handleYearChange = async e => {
     setTable(false);
     feeInfo.year = e.target.value;
-    mapSelectedYearWithId(e.target.value);
+    setIdOfSelectedYear(mapSelectedYearWithId(e.target.value));
   };
 
   const hideOption = validFee => {
@@ -155,15 +188,15 @@ export default function CourseFee(props) {
           setHideFourthYear(true);
           break;
         default:
-          return null;
       }
     }
   };
 
   useEffect(() => {
     let source = Axios.CancelToken.source();
-    const fetchData = async () => {
-      const [dueDate, validFee] = await Promise.all([
+
+    (async () => {
+      const [dueDate, validYear, validSemester] = await Promise.all([
         Axios.get(
           `http://localhost:4000/feePaymentDB/getCourseFeeDueDate/${courseFeeDueDateId}`,
           {
@@ -176,6 +209,13 @@ export default function CourseFee(props) {
             "token"
           )}`,
           { cancelToken: source.token }
+        ),
+        //get semester of fee is already submitted
+        Axios.get(
+          `http://localhost:4000/feePaymentDB/getCourseFeeSemester/${localStorage.getItem(
+            "token"
+          )}`,
+          { cancelToken: source.token }
         )
       ]);
       const { firstYear, secondYear, thirdYear, fourthYear } = dueDate.data;
@@ -185,9 +225,10 @@ export default function CourseFee(props) {
         thirdYear: new Date(thirdYear).toISOString().substring(0, 10),
         fourthYear: new Date(fourthYear).toISOString().substring(0, 10)
       });
-      hideOption(validFee.data);
-    };
-    fetchData();
+      hideOption(validYear.data);
+      hideOption(validSemester.data);
+    })();
+
     return () => {
       source.cancel("Cancelling in cleanup");
     };
@@ -206,28 +247,33 @@ export default function CourseFee(props) {
         const { totalFee, delayFee } = response.data;
         setDelayFeeFine(delayFee);
         setFee(totalFee);
-        return setCourseFeeType(response.data);
+        if (feeMode === "Year Wise") setFeeTypeBasedOnFeeMode(response.data);
+        if (feeMode === "Semester Wise")
+          setFeeTypeBasedOnFeeMode(calculateSemesterFeeType(response.data));
       })
       .catch(error => console.log(error.message));
 
     return () => {
       source.cancel("Cancelling in cleanup");
     };
-  }, [idOfSelectedYear]);
+  }, [idOfSelectedYear, feeMode]);
 
   useEffect(() => {
     let source = Axios.CancelToken.source();
 
-    calculateFee(idOfSelectedYear);
+    if (feeMode === "Year Wise") calculateYearWiseFee(idOfSelectedYear);
+
+    if (feeMode === "Semester Wise") calculateSemesterWiseFee();
+
     return () => {
       source.cancel("Cancelling in cleanup");
     };
-  }, [fee, delayFeeFine]);
+  }, [fee, delayFeeFine, feeMode]);
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (feeInfo.year === "")
-      return window.alert("please select valid year for fee payment");
+    if (feeInfo.year === "" && feeMode === "")
+      return window.alert("please select valid year/fee-mode for fee payment");
 
     const data = {
       feeInfo: feeInfo,
@@ -238,7 +284,7 @@ export default function CourseFee(props) {
         branch: props.parentProps.student.branch,
         admissionSession: props.parentProps.student.admissionSession
       },
-      courseFeeType: courseFeeType
+      courseFeeType: feeTypeBasedOnFeeMode
     };
 
     Axios.post(
@@ -247,17 +293,13 @@ export default function CourseFee(props) {
       data
     )
       .then(response => {
-        return window.alert("fee submission successful");
+        if (response.status === 200);
+        window.alert("Congratulations! Fee Submission Successful");
+        return props.history.push(
+          "/courseFeeReceipt/" + localStorage.getItem("token")
+        );
       })
       .catch(error => console.log(error.message));
-
-    setTimeout(
-      () =>
-        props.history.push(
-          "/courseFeeReceipt/" + localStorage.getItem("token")
-        ),
-      1000
-    );
   };
 
   return (
@@ -277,6 +319,7 @@ export default function CourseFee(props) {
                 <div>
                   <select
                     name="year"
+                    type="button"
                     className="custom-select"
                     onChange={handleYearChange}
                   >
@@ -302,10 +345,10 @@ export default function CourseFee(props) {
                       <option value="Fourth Year">{`4th Year`} </option>
                     )}
                   </select>
-                  <div>
-                    <br />
-                    {table ? showTable : null}
-                  </div>
+                  <hr />
+                  <div>{showFeeModeOptions}</div>
+                  <hr />
+                  <div>{table ? showTable : null}</div>
                 </div>
               </div>
               <div className="card-footer border-secondary text-muted">
