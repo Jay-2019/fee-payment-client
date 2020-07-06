@@ -34,7 +34,7 @@ export default function CourseFeeReceipt(props) {
     return () => {
       source.cancel("Cancelling in cleanup");
     };
-  }, []);
+  }, [props.history]);
 
   return (
     <div key={Math.random()}>
