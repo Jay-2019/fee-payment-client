@@ -6,6 +6,7 @@ import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
 import { arrayOfSemester, arrayOfBranch } from "../constant";
+import API from "../config";
 
 const idOfBackFeeType = "5ec376a132e3ab0f689a9d34";
 const idOfBackFeeDueDate = "5ec3822919bba72e54e8651d";
@@ -179,18 +180,12 @@ export default function BackFee(props) {
 
     (async () => {
       const [backFeeType, dueDate] = [
-        await Axios.get(
-          `http://localhost:4000/feePaymentDB/getBackFeeType/${idOfBackFeeType}`,
-          {
-            cancelToken: source.token
-          }
-        ),
-        await Axios.get(
-          `http://localhost:4000/feePaymentDB/getBackFeeDueDate/${idOfBackFeeDueDate}`,
-          {
-            cancelToken: source.token
-          }
-        )
+        await Axios.get(`${API}/getBackFeeType/${idOfBackFeeType}`, {
+          cancelToken: source.token
+        }),
+        await Axios.get(`${API}/getBackFeeDueDate/${idOfBackFeeDueDate}`, {
+          cancelToken: source.token
+        })
       ];
       setBackFeeType(backFeeType.data);
       const {
@@ -224,12 +219,9 @@ export default function BackFee(props) {
 
   useEffect(() => {
     let source = Axios.CancelToken.source();
-    Axios.get(
-      `http://localhost:4000/feePaymentDB/getSubject/${semester}/${branch}`,
-      {
-        cancelToken: source.token
-      }
-    )
+    Axios.get(`${API}/getSubject/${semester}/${branch}`, {
+      cancelToken: source.token
+    })
       .then(response => {
         setSubject(response.data);
       })
@@ -273,17 +265,16 @@ export default function BackFee(props) {
       backFeeType: backFeeType
     };
 
-    Axios.post(
-      "http://localhost:4000/feePaymentDB/backFeePayment/" +
-        props.match.params.id,
-      data
-    )
+    Axios.post(`${API}/backFeePayment/${props.match.params.id}`, data)
       .then(response => {
-        if (response.status === 200);
-        window.alert("Congratulations! Fee Submission Successful");
-        return props.history.push(
-          "/backFeeReceipt/" + localStorage.getItem("token")
-        );
+        if (response.status === 200) {
+          window.alert("Congratulations! Fee Submission Successful");
+          return props.history.push(
+            `/backFeeReceipt/${localStorage.getItem("token")}`
+          );
+        }
+
+        return window.alert("Something Went Wrong!!! Please Try Again Later ");
       })
       .catch(error => console.log(error.message));
     reSet();

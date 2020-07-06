@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { MyReceipt } from "./index";
 import { useNavigationBar } from "../../customHooks/index";
+import API from "../../config";
 
 export default function CourseFeePdfReceipt(props) {
   const navigationBar = useNavigationBar(
@@ -14,14 +15,17 @@ export default function CourseFeePdfReceipt(props) {
   useEffect(() => {
     let source = Axios.CancelToken.source();
 
-    Axios.get(
-      `http://localhost:4000/feePaymentDB/courseFeeData/${props.match.params.id}`,
-      {
-        cancelToken: source.token
-      }
-    )
+    Axios.get(`${API}/courseFeeData/${props.match.params.id}`, {
+      cancelToken: source.token
+    })
       .then(response => {
-        setFeeData(response.data);
+       if (response.status === 200) {
+        return setFeeData(response.data);
+        }
+
+        return window.alert(
+          "Something Went Wrong!!! Please Try After Sometime "
+        );
       })
 
       .catch(error => console.log(error.message));

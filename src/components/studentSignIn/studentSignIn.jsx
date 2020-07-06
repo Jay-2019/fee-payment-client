@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
+import API from "../config";
 
 export default function StudentSignIn(props) {
   const [getCaptcha, setCaptcha] = useState();
+
   const handleCaptcha = () => {
+    setCaptcha("");
     const alphaNumericString =
       "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const captchaLength = 8;
@@ -60,17 +63,19 @@ export default function StudentSignIn(props) {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         if (getCaptcha !== values.captcha) return;
         Axios.get(
-          "http://localhost:4000/feePaymentDB/studentAuthentication/" +
-            values.email +
-            "/" +
-            values.password
+          `${API}/studentAuthentication/${values.email}/${values.password}`
         )
           .then(response => {
+            if (response.data === null) {
+              window.alert("User Not Found!!! Please Enter Valid Information");
+              resetForm();
+            }
+
             if (response.status === 200) {
               localStorage.setItem("token", response.data._id);
               props.setStudent(response.data);
               return props.history.push(
-                "/studentProfile/" + localStorage.getItem("token")
+                `/studentProfile/${localStorage.getItem("token")}`
               );
             }
           })
@@ -130,12 +135,7 @@ export default function StudentSignIn(props) {
                   <hr />
                   <div className="row">
                     <div className="col text-center">
-                      <canvas
-                        id="captcha"
-                        width="200"
-                        height="30"
-                        // className={`col ${style.captcha}`}
-                      ></canvas>
+                      <canvas id="captcha" width="200" height="30"></canvas>
                     </div>
                   </div>
                   <hr />
@@ -147,9 +147,6 @@ export default function StudentSignIn(props) {
                         className="form-control"
                         id="userInputCaptcha"
                         placeholder="Fill Captcha"
-                        // onChange={this.handleUserInputCaptcha}
-                        // value={this.state.userInputCaptcha}
-                        // required
                       />
                       <ErrorMessage
                         name="captcha"

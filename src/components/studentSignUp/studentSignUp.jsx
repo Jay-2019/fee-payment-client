@@ -2,6 +2,8 @@ import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Axios from "axios";
+import API from "../config";
+
 import {
   arrayOfBranch,
   arrayOfGender,
@@ -74,11 +76,14 @@ export default function studentSignUp(props) {
           .oneOf([true], "You must accept the terms and conditions.")
       })}
       onSubmit={(values, { setSubmitting, resetForm }) => {
-        Axios.post("http://localhost:4000/feePaymentDB/studentSignUp", values)
+        Axios.post(`${API}/studentSignUp`, values)
           .then(response => {
-            if (response.status === 200);
-            window.alert("Congratulations! Sign-Up successful ");
-            return props.history.push("/studentSignIn");
+            if (response.status === 200) {
+              window.alert("Congratulations! Sign-Up successful ");
+              return props.history.push("/studentSignIn");
+            }
+
+            return window.alert("Something Went Wrong!!! Please Try Again. ");
           })
           .catch(error => error.message);
         setSubmitting(true);

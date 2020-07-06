@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import { useNavigationBar, useBackFeeReceipt } from "../customHooks/index";
+import API from "../config";
 
 export default function BackFeeReceipt(props) {
   const navigationBar = useNavigationBar(props.parentProps.student.firstName);
@@ -11,12 +12,18 @@ export default function BackFeeReceipt(props) {
   });
 
   useEffect(() => {
-    Axios.get(
-      "http://localhost:4000/feePaymentDB/receiptBackFee/" +
-        localStorage.getItem("token")
-    )
+    Axios.get(`${API}/receiptBackFee/${localStorage.getItem("token")}`)
       .then(response => {
-        return setFee(response.data);
+        if (response.status === 200 && response.data.length > 0) {
+          return setFee(response.data);
+        }
+
+        if (response.status === 200 && response.data.length === 0) {
+          window.alert("There Is No Receipt of Back Fee!!!");
+          return props.history.push(
+            `/backFee/${localStorage.getItem("token")}`
+          );
+        }
       })
       .catch(error => console.log(error.message));
   }, []);
@@ -27,8 +34,8 @@ export default function BackFeeReceipt(props) {
       <hr />
       <div className="d-flex justify-content-center">
         <div className="col-sm-12 col-md-8">
-      <div>{backFeeReceipt}</div>
-      </div>
+          <div>{backFeeReceipt}</div>
+        </div>
       </div>
     </div>
   );

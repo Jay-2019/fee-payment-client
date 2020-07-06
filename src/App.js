@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { publicRoutes, privateRoutes } from "./routes/index";
 import { NoMatch } from './components/index';
 import Axios from "axios";
+import API from "./components/config";
 import './App.css';
 
 export default function App() {
@@ -11,7 +12,7 @@ export default function App() {
 
   useEffect(() => {
     Axios.get(
-      `http://localhost:4000/feePaymentDB/getStudentProfile/${localStorage.getItem("token")}`
+      `${API}/getStudentProfile/${localStorage.getItem("token")}`
     )
       .then(response => setStudent(response.data))
       .catch(error => console.log(error.message));

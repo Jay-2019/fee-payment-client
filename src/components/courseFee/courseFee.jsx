@@ -5,6 +5,7 @@ import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
 import { useState, useEffect } from "react";
 import { calculateSemesterFeeType, mapSelectedYearWithId } from "./helper";
+import API from "../config";
 
 const courseFeeDueDateId = "5ec0ec3d70f1cc05e0d9f6d8";
 
@@ -197,24 +198,16 @@ export default function CourseFee(props) {
 
     (async () => {
       const [dueDate, validYear, validSemester] = await Promise.all([
-        Axios.get(
-          `http://localhost:4000/feePaymentDB/getCourseFeeDueDate/${courseFeeDueDateId}`,
-          {
-            cancelToken: source.token
-          }
-        ),
+        Axios.get(`${API}/getCourseFeeDueDate/${courseFeeDueDateId}`, {
+          cancelToken: source.token
+        }),
         //get year of fee is already submitted
-        Axios.get(
-          `http://localhost:4000/feePaymentDB/getCourseFeeYear/${localStorage.getItem(
-            "token"
-          )}`,
-          { cancelToken: source.token }
-        ),
+        Axios.get(`${API}/getCourseFeeYear/${localStorage.getItem("token")}`, {
+          cancelToken: source.token
+        }),
         //get semester of fee is already submitted
         Axios.get(
-          `http://localhost:4000/feePaymentDB/getCourseFeeSemester/${localStorage.getItem(
-            "token"
-          )}`,
+          `${API}/getCourseFeeSemester/${localStorage.getItem("token")}`,
           { cancelToken: source.token }
         )
       ]);
@@ -237,12 +230,9 @@ export default function CourseFee(props) {
   // get selected year of courseFee-Type
   useEffect(() => {
     let source = Axios.CancelToken.source();
-    Axios.get(
-      `http://localhost:4000/feePaymentDB/getCourseFeeType/${idOfSelectedYear}`,
-      {
-        cancelToken: source.token
-      }
-    )
+    Axios.get(`${API}/getCourseFeeType/${idOfSelectedYear}`, {
+      cancelToken: source.token
+    })
       .then(response => {
         const { totalFee, delayFee } = response.data;
         setDelayFeeFine(delayFee);
@@ -287,17 +277,16 @@ export default function CourseFee(props) {
       courseFeeType: feeTypeBasedOnFeeMode
     };
 
-    Axios.post(
-      "http://localhost:4000/feePaymentDB/courseFeePayment/" +
-        props.match.params.id,
-      data
-    )
+    Axios.post(`${API}/courseFeePayment/${props.match.params.id}`, data)
       .then(response => {
-        if (response.status === 200);
-        window.alert("Congratulations! Fee Submission Successful");
-        return props.history.push(
-          "/courseFeeReceipt/" + localStorage.getItem("token")
-        );
+        if (response.status === 200) {
+          window.alert("Congratulations! Fee Submission Successful");
+          return props.history.push(
+            `/courseFeeReceipt/${localStorage.getItem("token")}`
+          );
+        }
+
+        return window.alert("Something Went Wrong!!! Please Try Again Later ");
       })
       .catch(error => console.log(error.message));
   };
