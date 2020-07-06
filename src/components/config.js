@@ -1,7 +1,7 @@
 
 const prod = {
     url: {
-        API_URL: "https://fee-payment-server.herokuapp.com",
+        API_URL: "https://fee-payment-server.herokuapp.com/feePaymentDB",
     }
 };
 
