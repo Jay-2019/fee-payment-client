@@ -20,33 +20,56 @@ export function mapSelectedYearWithId(year) {
     return idOfSelectedYear;
 };
 
+// calculating the semester fee-type.
 export function calculateSemesterFeeType(feeType) {
+    const {
+        _id,
+        year,
+        totalFee,
+        delayFee,
+        studyTripFee,
+        tuitionFee,
+        laboratory,
+        securityFee,
+        hostelFee,
+        otherCharges,
+        entranceFees,
+        centralLibraryFee,
+        studentSmartCardFee,
+        sportsAndCulturalProgramFee,
+        studentWelfareFee,
+        developmentFee,
+        studentAcademicGuide,
+        examinationFee,
+        energyCharges,
+        internetFee,
+        updatedAt,
+        createdAt,
+    } = feeType;
+    
     return {
-        _id: feeType._id,
-        year: feeType.year,
-        totalFee: feeType.totalFee / 2,
-        delayFee: feeType.delayFee / 2,
-        studyTripFee: feeType.studyTripFee / 2,
-        tuitionFee: feeType.tuitionFee / 2,
-        laboratory: feeType.laboratory / 2,
-        securityFee: feeType.securityFee / 2,
-        hostelFee: feeType.hostelFee / 2,
-        otherCharges: feeType.otherCharges / 2,
-        entranceFees: feeType.entranceFees / 2,
-        centralLibraryFee: feeType.centralLibraryFee / 2,
-        studentSmartCardFee: feeType.studentSmartCardFee / 2,
-        sportsAndCulturalProgramFee: feeType.sportsAndCulturalProgramFee / 2,
-        studentWelfareFee: feeType.studentWelfareFee / 2,
-        developmentFee: feeType.developmentFee / 2,
-        studentAcademicGuide: feeType.studentAcademicGuide / 2,
-        examinationFee: feeType.examinationFee / 2,
-        energyCharges: feeType.energyCharges / 2,
-        internetFee: feeType.internetFee / 2,
-        updatedAt: feeType.updatedAt,
-        createdAt: feeType.createdAt,
+        _id: _id,
+        year: year,
+        totalFee: totalFee / 2,
+        delayFee: delayFee / 2,
+        studyTripFee: studyTripFee / 2,
+        tuitionFee: tuitionFee / 2,
+        laboratory: laboratory / 2,
+        securityFee: securityFee / 2,
+        hostelFee: hostelFee / 2,
+        otherCharges: otherCharges / 2,
+        entranceFees: entranceFees / 2,
+        centralLibraryFee: centralLibraryFee / 2,
+        studentSmartCardFee: studentSmartCardFee / 2,
+        sportsAndCulturalProgramFee: sportsAndCulturalProgramFee / 2,
+        studentWelfareFee: studentWelfareFee / 2,
+        developmentFee: developmentFee / 2,
+        studentAcademicGuide: studentAcademicGuide / 2,
+        examinationFee: examinationFee / 2,
+        energyCharges: energyCharges / 2,
+        internetFee: internetFee / 2,
+        updatedAt: updatedAt,
+        createdAt: createdAt,
 
     }
 };
-
-
-

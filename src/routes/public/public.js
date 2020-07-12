@@ -2,6 +2,7 @@ import React from 'react'
 import { StudentSignUp, StudentSignIn } from '../../components/index';
 import PublicRoute from "./publicRoute";
 
+// list of all public routes.
 const publicRoutes = (props) => {
     const routes = [
         { path: "/", component: StudentSignIn },

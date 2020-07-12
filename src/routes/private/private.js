@@ -11,7 +11,7 @@ import {
 } from '../../components/index';
 import PrivateRoute from "./privateRoute";
 
-
+// list of all private routes.
 const privateRoutes = (props) => {
     const routes = [
 

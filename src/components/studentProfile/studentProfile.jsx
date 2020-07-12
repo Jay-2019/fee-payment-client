@@ -13,11 +13,15 @@ export default function StudentProfile(props) {
       <hr />
       <div className="d-flex justify-content-center">
         <div className="col-sm-12 col-md-8">
-          <div className="card border-light text-white bg-dark text-center">
+          <div className="card border-light text-success bg-dark text-center">
             <div
-              className={`card-header border-secondary ${style.courseFeeTitle}`}
+              className={`card-header text-warning border-secondary ${style.courseFeeTitle}`}
             >
-              <h2>My Profile</h2>
+              <i>
+                <b>
+                <h2>{"My Profile "}</h2>
+                </b>
+              </i>
             </div>
             <div className="card-body">
               <div className="row">

@@ -224,7 +224,7 @@ const MyReceipt = props => (
           loading ? (
             <h2> Loading document...</h2>
           ) : (
-            <button className="btn btn-outline-danger btn-block">
+            <button className="btn btn-outline-success btn-block">
               {"Download Invoice Now"}
             </button>
           )
@@ -247,7 +247,7 @@ const MyReceipt = props => (
           loading ? (
             <h2> Loading document...</h2>
           ) : (
-            <button className="btn btn-outline-danger btn-block">
+            <button className="btn btn-outline-success btn-block">
               {"Download Invoice Now"}
             </button>
           )

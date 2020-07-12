@@ -6,9 +6,9 @@ import printIcon from '../../assets/index';
 export default function useBackFeeReceipt(props) {
     const Card = ({ feeId, feeInfo, studentInfo, createdAt }) => (
         <>
-            <div className="card border-light text-white bg-dark text-center">
+            <div className="card border-light text-success bg-dark text-center">
                 <div className="card-header border-secondary">
-                    <div className="card-title">
+                    <div className="card-title text-warning">
                         <div className='row'>
                             <div className='col-sm-6'>
                                 <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
@@ -21,8 +21,8 @@ export default function useBackFeeReceipt(props) {
                         </div>
                     </div>
                 </div>
-                <div className="card-body">
-                    <table className={`table table-striped table-dark `}>
+                <div className="card-body ">
+                    <table className={`table table-striped table-dark text-success `}>
                         <tbody>
                             <tr>
                                 <th>
@@ -68,7 +68,7 @@ export default function useBackFeeReceipt(props) {
                                     <b>Course Fee</b>
                                 </th>
                                 <td>
-                                    <b>{feeInfo.backFee}Rs</b>
+                                    <b>{(feeInfo.backFee).toFixed(2)} Rs.</b>
                                 </td>
                             </tr>
                             <tr >
@@ -76,7 +76,7 @@ export default function useBackFeeReceipt(props) {
                                     <b>Delay Fee</b>
                                 </th>
                                 <td>
-                                    <b>{feeInfo.delayFee}Rs</b>
+                                    <b>{(feeInfo.delayFee).toFixed(2)} Rs.</b>
                                 </td>
                             </tr>
                             <tr >
@@ -84,7 +84,7 @@ export default function useBackFeeReceipt(props) {
                                     <b>Total Amount</b>
                                 </th>
                                 <td>
-                                    <b>{feeInfo.backFee} Rs</b>
+                                    <b>{(feeInfo.totalFee).toFixed(2)} Rs.</b>
                                 </td>
                             </tr>
                         </tbody>

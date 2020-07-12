@@ -5,14 +5,13 @@ import printIcon from '../../assets/index';
 
 export default function useCourseFeeReceipt(props) {
     const Card = ({ feeId, feeInfo, studentInfo, createdAt }) => (
-
         <>
-            <div className={`card border-light text-white bg-dark text-center `} >
+            <div className={`card border-light text-success bg-dark text-center `} >
                 <div className="card-header border-secondary">
-                    <div className="card-title">
+                    <div className="card-title text-warning">
                         <div className='row'>
-                            <div className='col-sm-6'>
-                                <h5>{new Date(createdAt).toLocaleDateString("en-GB")}</h5>
+                            <div className='col-sm-6 '>
+                                <h4>{new Date(createdAt).toLocaleDateString("en-GB")}</h4>
                             </div>
                             <div className='col-sm-6 '>
                                 <Link to={`/courseFeePdfReceipt/${feeId}`}>
@@ -26,55 +25,55 @@ export default function useCourseFeeReceipt(props) {
                 <div className="card-body">
                     <div className="row">
                         <div className="col">
-                            <h5>{`${studentInfo.firstName} ${studentInfo.lastName}`}</h5>
+                            <b>{`${studentInfo.firstName} ${studentInfo.lastName}`}</b>
                         </div>
                         <div className="col">
-                            <h5>{`${studentInfo.branch}`}</h5>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="row">
-                        <div className="col">
-                            <h5>Year</h5>
-                        </div>
-                        <div className="col">
-                            <h5>{feeInfo.year}</h5>
+                            <b>{`${studentInfo.branch}`}</b>
                         </div>
                     </div>
                     <hr />
                     <div className="row">
                         <div className="col">
-                            <h5>Fee Mode</h5>
+                            <b>Year</b>
                         </div>
                         <div className="col">
-                            <h5>{feeInfo.feeMode}</h5>
-                        </div>
-                    </div>
-                    <hr />
-                    <div className="row">
-                        <div className="col">
-                            <h5>Course Fee</h5>
-                        </div>
-                        <div className="col">
-                            <h5>{feeInfo.courseFee}</h5>
+                            <b>{feeInfo.year}</b>
                         </div>
                     </div>
                     <hr />
                     <div className="row">
                         <div className="col">
-                            <h5>Delay Fee</h5>
+                            <b>Fee Mode</b>
                         </div>
                         <div className="col">
-                            <h5>{feeInfo.delayFee}</h5>
+                            <b>{feeInfo.feeMode}</b>
                         </div>
                     </div>
                     <hr />
                     <div className="row">
                         <div className="col">
-                            <h5>Total Fee</h5>
+                            <b>Course Fee</b>
                         </div>
                         <div className="col">
-                            <h5>{feeInfo.totalFee}</h5>
+                            <b>{(feeInfo.courseFee).toFixed(2)} Rs.</b>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                        <div className="col">
+                            <b>Delay Fee</b>
+                        </div>
+                        <div className="col">
+                            <b>{(feeInfo.delayFee).toFixed(2)} Rs.</b>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                        <div className="col">
+                            <b>Total Fee</b>
+                        </div>
+                        <div className="col">
+                            <b>{(feeInfo.totalFee).toFixed(2)} Rs.</b>
 
                         </div>
                     </div>

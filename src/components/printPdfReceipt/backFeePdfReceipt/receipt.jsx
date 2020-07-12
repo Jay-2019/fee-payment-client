@@ -165,7 +165,10 @@ const Receipt = value => (
 
       <View style={styles.view}>
         <Text style={styles.subtitle}>
-          Date: {new Date(value.value.createdAt).toISOString().substring(0, 10)}
+         {" Date: "}
+          {new Date(value.value.createdAt)
+            .toISOString()
+            .substring(0, 10)}
         </Text>
 
         <Text style={styles.subtitle}>
@@ -226,14 +229,14 @@ const MyReceipt = props => (
           loading ? (
             <h2> Loading document...</h2>
           ) : (
-            <button className="btn btn-outline-danger btn-block">
+            <button className="btn btn-outline-success btn-block">
               {"Download Invoice Now"}
             </button>
           )
         }
       </PDFDownloadLink>
     ) : null}
-    
+
     {props.value ? (
       <PDFViewer height="600" width="100%">
         <Receipt value={props.value} />
@@ -249,7 +252,7 @@ const MyReceipt = props => (
           loading ? (
             <h2> Loading document...</h2>
           ) : (
-            <button className="btn btn-outline-danger btn-block">
+            <button className="btn btn-outline-success btn-block">
               {"Download Invoice Now"}
             </button>
           )

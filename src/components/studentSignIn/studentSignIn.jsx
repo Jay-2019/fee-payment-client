@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Swal from "sweetalert2";
 import Axios from "axios";
 import API from "../config";
 
 export default function StudentSignIn(props) {
   const [getCaptcha, setCaptcha] = useState();
+  const [isLoading, setLoading] = useState(false);
 
   const handleCaptcha = () => {
     setCaptcha("");
@@ -38,10 +40,38 @@ export default function StudentSignIn(props) {
   };
 
   useEffect(() => {
-    handleCaptcha();
-  }, []);
+    
+    if (!isLoading) {  
+      handleCaptcha();
+    
+      return;
+    }
+  }, [isLoading]);
 
-  return (
+  return isLoading ? (
+    <div
+      className="d-flex justify-content-center"
+      style={{ paddingTop: "200px" }}
+    >
+      <div className="row">
+        <div className="col ">
+          <div className="spinner-grow text-danger" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+        <div className="col    ">
+          <div className="spinner-grow text-warning" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+        <div className="col ">
+          <div className="spinner-grow text-info" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <Formik
       initialValues={{
         email: "",
@@ -61,34 +91,84 @@ export default function StudentSignIn(props) {
         captcha: Yup.string().required("Please Fill Required Captcha")
       })}
       onSubmit={(values, { setSubmitting, resetForm }) => {
-        if (getCaptcha !== values.captcha) return;
+        if (getCaptcha !== values.captcha) {
+          Swal.fire({
+            position: "center",
+            icon: "warning",
+            title: "Please Enter valid Captcha.",
+            showConfirmButton: true,
+            timer: 2000
+          });
+          resetForm();
+          return;
+        }
+        setLoading(true);
         Axios.get(
           `${API}/studentAuthentication/${values.email}/${values.password}`
         )
           .then(response => {
-            if (response.data === null) {
-              window.alert("User Not Found!!! Please Enter Valid Information");
-              resetForm();
-            }
-
-            if (response.status === 200) {
+            if (response.status === 200 && response.data) {
               localStorage.setItem("token", response.data._id);
               props.setStudent(response.data);
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Sign-In Successful :)",
+                showConfirmButton: true,
+                timer: 3000
+              });
+              resetForm();
               return props.history.push(
                 `/studentProfile/${localStorage.getItem("token")}`
               );
             }
+
+            if (response.status === 200 && response.data === null) {
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Student Not Found!!! Please Enter Valid Information",
+                showConfirmButton: true,
+                timer: 5000
+              });
+              resetForm();
+              return setLoading(false);
+            }
+
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Something Went Wrong!!! Please Try After Sometime.",
+              showConfirmButton: true,
+              timer: 5000
+            });
+            resetForm();
+            return props.history.push("/studentSignIn");
           })
-          .catch(error => error.message);
+          .catch(error => {
+            console.log(error.message);
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Something Went Wrong!!! Please Try After Sometime.",
+              showConfirmButton: true,
+              timer: 5000
+            });
+            return props.history.push("/studentSignIn");
+          });
+
+        setSubmitting(true);
       }}
     >
       <Form>
         <br />
         <div className="d-flex justify-content-center ">
-          <div className="col-sm-12 col-md-6">
-            <div className="card text-white border-light bg-dark">
+          <div className="col-sm-12 col-md-6 ">
+            <div className="card text-white  border-light bg-dark">
               <div className="card-header text-warning text-center border-secondary">
-                <h2>Student SignIn</h2>
+                <i>
+                  <h2> {" Student SignIn"}</h2>
+                </i>
               </div>
               <div className="card-body ">
                 <div>
@@ -163,9 +243,11 @@ export default function StudentSignIn(props) {
                 <div className="text-center">
                   <button
                     type="submit"
-                    className="btn  btn-outline-secondary btn-block"
+                    className="btn  btn-outline-warning btn-block"
                   >
-                    <b>{" Sign In "}</b>
+                    <i>
+                      <b>{" Sign In "}</b>
+                    </i>
                   </button>
                 </div>
 

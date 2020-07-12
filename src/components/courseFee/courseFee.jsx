@@ -1,5 +1,6 @@
 import React from "react";
 // import { Redirect } from "react-router-dom";
+import Swal from "sweetalert2";
 import Axios from "axios";
 import style from "../../style/style.module.css";
 import { useNavigationBar } from "../customHooks/index";
@@ -11,6 +12,8 @@ const courseFeeDueDateId = "5ec0ec3d70f1cc05e0d9f6d8";
 
 export default function CourseFee(props) {
   const navigationBar = useNavigationBar(props.parentProps.student.firstName);
+
+  const [isLoading, setLoading] = useState(true);
   const [dueDate, setDueDate] = useState({
     firstYear: "",
     secondYear: "",
@@ -32,16 +35,33 @@ export default function CourseFee(props) {
     totalFee: 0
   });
 
+  //this function reset list of  state values
+  const resetForm = () => {
+    setFeeMode("");
+    setIdOfSelectedYear("");
+    setDelayFeeFine(0);
+    setFeeInfo({
+      year: "",
+      feeMode: "",
+      courseFee: 0,
+      delayFee: 0,
+      totalFee: 0
+    });
+  };
+
   const [hideFirstYear, setHideFirstYear] = useState(false);
   const [hideSecondYear, setHideSecondYear] = useState(false);
   const [hideThirdYear, setHideThirdYear] = useState(false);
   const [hideFourthYear, setHideFourthYear] = useState(false);
 
+  // handler function for fee-Mode(Radio button)
+  //this handler function call only when onChange event occurs.
   const handleFeeModeChange = e => {
     const { value } = e.target;
     if (value !== "") setFeeMode(value);
   };
 
+  // Fee-Mode input Group
   const showFeeModeOptions = (
     <div className="row">
       <div className="col ">
@@ -54,7 +74,9 @@ export default function CourseFee(props) {
             onChange={handleFeeModeChange}
             checked={feeMode === "Year Wise"}
           />
-          <label className="form-check-label">Year Wise</label>
+          <label className="form-check-label">
+            <b>{"Year Wise"}</b>
+          </label>
         </div>
       </div>
       <div className="col ">
@@ -67,12 +89,16 @@ export default function CourseFee(props) {
             onChange={handleFeeModeChange}
             checked={feeMode === "Semester Wise"}
           />
-          <label className="form-check-label">Semester Wise</label>
+          <label className="form-check-label">
+            <b>{"Semester Wise"}</b>
+          </label>
         </div>
       </div>
     </div>
   );
 
+  // Display Real Time Calculated Fee in form of Table
+  // render every time when user change fee-mode.
   const showTable = (
     <div className="card-title">
       <table className={`table table-striped table-dark ${style.tableText}`}>
@@ -82,7 +108,7 @@ export default function CourseFee(props) {
               <b>Course Fee</b>
             </th>
             <td>
-              <b>{feeInfo.courseFee}.00 Rs</b>
+              <b>{feeInfo.courseFee} Rs.</b>
             </td>
           </tr>
 
@@ -91,7 +117,7 @@ export default function CourseFee(props) {
               <b>Delay Fee</b>
             </th>
             <td>
-              <b>{feeInfo.delayFee}.00 Rs</b>
+              <b>{feeInfo.delayFee} Rs.</b>
             </td>
           </tr>
 
@@ -100,20 +126,24 @@ export default function CourseFee(props) {
               <b>Total Amount</b>
             </th>
             <td>
-              <b>{feeInfo.totalFee}.00 Rs</b>
+              <b>{feeInfo.totalFee} Rs.</b>
             </td>
           </tr>
         </tbody>
       </table>
       <div>
         <br />
-        <button type="submit" className="btn  btn-outline-warning">
-          Pay Now{" "}
+        <button type="submit" className="btn btn-block btn-outline-success">
+          <i>
+            <b>{" Pay Now "}</b>
+          </i>
         </button>
       </div>
     </div>
   );
 
+  // Check Due-Date/last Date of Fee Submission
+  // and return the amount if due-date exceed.
   const checkDueDate = yearOfDueDate => {
     if (yearOfDueDate < new Date(Date.now()).toISOString().substring(0, 10)) {
       return delayFeeFine;
@@ -121,6 +151,8 @@ export default function CourseFee(props) {
     return 0;
   };
 
+  // calculating the fee on the basis of the selected-year & Fee-Mode is yearWise
+  // and set values in feeInfo state.
   const calculateYearWiseFee = idOfSelectedYear => {
     feeInfo.courseFee = fee;
     switch (idOfSelectedYear) {
@@ -144,14 +176,16 @@ export default function CourseFee(props) {
       setFeeInfo({
         year: feeInfo.year,
         feeMode: feeMode,
-        courseFee: feeInfo.courseFee,
-        delayFee: feeInfo.delayFee,
-        totalFee: fee + feeInfo.delayFee
+        courseFee: feeInfo.courseFee.toFixed(2),
+        delayFee: feeInfo.delayFee.toFixed(2),
+        totalFee: (fee + feeInfo.delayFee).toFixed(2)
       });
     }
     setTable(true);
   };
 
+  // calculating the fee on the basis of the selected-year & Fee-Mode is semesterWise
+  // and set values in feeInfo state.
   const calculateSemesterWiseFee = () => {
     feeInfo.courseFee = fee / 2;
 
@@ -159,20 +193,24 @@ export default function CourseFee(props) {
       setFeeInfo({
         year: feeInfo.year,
         feeMode: feeMode,
-        courseFee: feeInfo.courseFee,
-        delayFee: delayFeeFine,
-        totalFee: fee / 2 + delayFeeFine
+        courseFee: feeInfo.courseFee.toFixed(2),
+        delayFee: (delayFeeFine / 2).toFixed(2),
+        totalFee: (fee / 2 + delayFeeFine).toFixed(2)
       });
       setTable(true);
     }
   };
 
+  // handler function for Year(dropDown list)
+  //this handler function call only when onChange event occurs.
   const handleYearChange = async e => {
     setTable(false);
     feeInfo.year = e.target.value;
     setIdOfSelectedYear(mapSelectedYearWithId(e.target.value));
   };
 
+  // function check the year of fee is already submitted,
+  // and particular year option during componentDidMount.
   const hideOption = validFee => {
     for (let data of validFee) {
       switch (data) {
@@ -193,6 +231,10 @@ export default function CourseFee(props) {
     }
   };
 
+  // this useEffect call only when the componentDidMount
+  // used for get data  course-fee-due-dates and list of branches,
+  //list of years(that's fee is already submitted) and list of semester(that's fee is already submitted)
+  // all apis are call in parallel.
   useEffect(() => {
     let source = Axios.CancelToken.source();
 
@@ -220,6 +262,7 @@ export default function CourseFee(props) {
       });
       hideOption(validYear.data);
       hideOption(validSemester.data);
+      setLoading(false);
     })();
 
     return () => {
@@ -227,43 +270,96 @@ export default function CourseFee(props) {
     };
   }, [hideFirstYear, hideSecondYear, hideThirdYear, hideFourthYear]);
 
-  // get selected year of courseFee-Type
+  // this useEffect call only when the feeMode & idOfSelectedYear state change
+  //used for calculate-fee-type based on selected fee-mode .
   useEffect(() => {
     let source = Axios.CancelToken.source();
-    Axios.get(`${API}/getCourseFeeType/${idOfSelectedYear}`, {
-      cancelToken: source.token
-    })
-      .then(response => {
-        const { totalFee, delayFee } = response.data;
-        setDelayFeeFine(delayFee);
-        setFee(totalFee);
-        if (feeMode === "Year Wise") setFeeTypeBasedOnFeeMode(response.data);
-        if (feeMode === "Semester Wise")
-          setFeeTypeBasedOnFeeMode(calculateSemesterFeeType(response.data));
+
+    if (idOfSelectedYear) {
+      Axios.get(`${API}/getCourseFeeType/${idOfSelectedYear}`, {
+        cancelToken: source.token
       })
-      .catch(error => console.log(error.message));
+        .then(response => {
+          if (response.status === 200 && response.data) {
+            const { totalFee, delayFee } = response.data;
+            setDelayFeeFine(delayFee);
+            setFee(totalFee);
+          }
+
+          if (response.status === 200 && response.data === null) {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Something Went Wrong!!! Please Try After Sometime.",
+              showConfirmButton: true,
+              timer: 5000
+            });
+            resetForm();
+            return;
+          }
+
+          if (feeMode === "Year Wise") {
+            setFeeTypeBasedOnFeeMode(response.data);
+            setLoading(false);
+            return;
+          }
+
+          if (feeMode === "Semester Wise") {
+            setFeeTypeBasedOnFeeMode(calculateSemesterFeeType(response.data));
+            setLoading(false);
+            return;
+          }
+        })
+        .catch(error => {
+          console.log(error.message);
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Something Went Wrong!!! Please Try After Sometime.",
+            showConfirmButton: true,
+            timer: 5000
+          });
+          resetForm();
+          return setLoading(false);
+        });
+
+      return;
+    }
 
     return () => {
       source.cancel("Cancelling in cleanup");
     };
   }, [idOfSelectedYear, feeMode]);
 
+  // this useEffect call when the feeMode state change
+  // used for actual calculation of course-fee.
   useEffect(() => {
+    setLoading(true);
     let source = Axios.CancelToken.source();
 
     if (feeMode === "Year Wise") calculateYearWiseFee(idOfSelectedYear);
 
     if (feeMode === "Semester Wise") calculateSemesterWiseFee();
 
+    setLoading(false);
     return () => {
       source.cancel("Cancelling in cleanup");
     };
   }, [fee, delayFeeFine, feeMode]);
 
+  //  the handler function call only when the onSubmit event occurs
+  //  used for actual submission of course-fee
   const handleSubmit = e => {
     e.preventDefault();
-    if (feeInfo.year === "" && feeMode === "")
-      return window.alert("please select valid year/fee-mode for fee payment");
+    if (feeInfo.year === "" && feeMode === "") {
+      return Swal.fire({
+        position: "center",
+        icon: "warning",
+        title: "Please select valid Year/Fee-Mode for fee payment.",
+        showConfirmButton: true,
+        timer: 5000
+      });
+    }
 
     const data = {
       feeInfo: feeInfo,
@@ -277,76 +373,138 @@ export default function CourseFee(props) {
       courseFeeType: feeTypeBasedOnFeeMode
     };
 
+    setLoading(true);
     Axios.post(`${API}/courseFeePayment/${props.match.params.id}`, data)
       .then(response => {
-        if (response.status === 200) {
-          window.alert("Congratulations! Fee Submission Successful");
+        if (response.status === 200 && response.data) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Congratulations!!! Fee Submission Successful :)",
+            showConfirmButton: true,
+            timer: 5000
+          });
           return props.history.push(
             `/courseFeeReceipt/${localStorage.getItem("token")}`
           );
         }
 
-        return window.alert("Something Went Wrong!!! Please Try Again Later ");
+        if (response.status === 200 && response.data === null) {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Submission Failed!!! Please Try Again.",
+            showConfirmButton: true,
+            timer: 5000
+          });
+          resetForm();
+          return setLoading(false);
+        }
+
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Something Went Wrong!!! Please Try After Sometime.",
+          showConfirmButton: true,
+          timer: 5000
+        });
+        resetForm();
+        return setLoading(false);
       })
-      .catch(error => console.log(error.message));
+      .catch(error => {
+        console.log(error.message);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Something Went Wrong!!! Please Try After Sometime.",
+          showConfirmButton: true,
+          timer: 5000
+        });
+        resetForm();
+        return setLoading(false);
+      });
+    resetForm();
   };
 
-  return (
-    <>
-      <form onSubmit={handleSubmit}>
-        {navigationBar}
-        <br />
-        <div className="d-flex justify-content-center">
-          <div className="col-sm-12 col-md-8">
-            <div className="card border-light bg-dark text-white text-center">
-              <div
-                className={`card-header border-secondary ${style.courseFeeTitle}`}
-              >
-                <h2>Course Fee</h2>
+  return isLoading ? (
+    <div
+      className="d-flex justify-content-center"
+      style={{ paddingTop: "200px" }}
+    >
+      <div className="row">
+        <div className="col ">
+          <div className="spinner-grow text-danger" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+        <div className="col    ">
+          <div className="spinner-grow text-warning" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+        <div className="col ">
+          <div className="spinner-grow text-info" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <form onSubmit={handleSubmit}>
+      {navigationBar}
+      <br />
+      <div className="d-flex justify-content-center">
+        <div className="col-sm-12 col-md-8">
+          <div className="card border-light bg-dark text-success text-center">
+            <div
+              className={`card-header text-success border-secondary ${style.courseFeeTitle}`}
+            >
+              <i>
+                <h2> {"Course Fee "}</h2>
+              </i>
+            </div>
+            <div className="card-body">
+              <div>
+                <select
+                  name="year"
+                  type="button"
+                  className="custom-select"
+                  onChange={handleYearChange}
+                >
+                  <option hidden>Select Year...</option>
+                  {hideFirstYear ? (
+                    <option hidden>{`1st Year`}</option>
+                  ) : (
+                    <option value="First Year">{`1st Year`} </option>
+                  )}
+                  {hideSecondYear ? (
+                    <option hidden>{`2nd Year`}</option>
+                  ) : (
+                    <option value="Second Year">{`2nd Year`} </option>
+                  )}
+                  {hideThirdYear ? (
+                    <option hidden>{`3rd Year`}</option>
+                  ) : (
+                    <option value="Third Year">{`3rd Year`} </option>
+                  )}
+                  {hideFourthYear ? (
+                    <option hidden>{`4th Year`}</option>
+                  ) : (
+                    <option value="Fourth Year">{`4th Year`} </option>
+                  )}
+                </select>
+                <hr />
+                <div>{showFeeModeOptions}</div>
+                <hr />
+                <div>{table ? showTable : null}</div>
               </div>
-              <div className="card-body">
-                <div>
-                  <select
-                    name="year"
-                    type="button"
-                    className="custom-select"
-                    onChange={handleYearChange}
-                  >
-                    <option hidden>Select Year...</option>
-                    {hideFirstYear ? (
-                      <option hidden>{`1st Year`}</option>
-                    ) : (
-                      <option value="First Year">{`1st Year`} </option>
-                    )}
-                    {hideSecondYear ? (
-                      <option hidden>{`2nd Year`}</option>
-                    ) : (
-                      <option value="Second Year">{`2nd Year`} </option>
-                    )}
-                    {hideThirdYear ? (
-                      <option hidden>{`3rd Year`}</option>
-                    ) : (
-                      <option value="Third Year">{`3rd Year`} </option>
-                    )}
-                    {hideFourthYear ? (
-                      <option hidden>{`4th Year`}</option>
-                    ) : (
-                      <option value="Fourth Year">{`4th Year`} </option>
-                    )}
-                  </select>
-                  <hr />
-                  <div>{showFeeModeOptions}</div>
-                  <hr />
-                  <div>{table ? showTable : null}</div>
-                </div>
-              </div>
-              <div className="card-footer border-secondary text-muted">
-                Faculty of engineering & technology
-              </div>
+            </div>
+            <div className="card-footer border-secondary text-muted">
+              Faculty of engineering & technology
             </div>
           </div>
         </div>
-      </form>
-    </>
+      </div>
+    </form>
   );
 }

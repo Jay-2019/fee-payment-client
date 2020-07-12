@@ -1,16 +1,81 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Swal from "sweetalert2";
 import Axios from "axios";
 import API from "../config";
 
-import {
-  arrayOfBranch,
-  arrayOfGender,
-  arrayOfAdmissionSession
-} from "../constant";
-export default function studentSignUp(props) {
-  return (
+import { arrayOfGender, arrayOfAdmissionSession } from "../constant";
+
+export default function StudentSignUp(props) {
+  const [arrayOfBranch, setArrayOfBranch] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+
+  // this useEffect call only when the componentDidMount
+  // used for get list of branch.
+  useEffect(() => {
+    let source = Axios.CancelToken.source();
+
+    Axios.get(`${API}/getBranch`)
+      .then(response => {
+        if (response.status === 200 && response.data) {
+          setArrayOfBranch(response.data);
+          setLoading(false);
+          return;
+        }
+
+        if (response.status === 200 && response.data === null) {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Something Went Wrong!!! Please Try After Sometime.",
+            showConfirmButton: true,
+            timer: 5000
+          });
+          return props.history.push("/studentSignUp");
+        }
+      })
+      .catch(error => {
+        console.log(error.message);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Something Went Wrong!!! Please Try After Sometime.",
+          showConfirmButton: true,
+          timer: 5000
+        });
+        return props.history.push("/studentSignUp");
+      });
+
+    return () => {
+      source.cancel("Cancelling in cleanup");
+    };
+  }, [props.history]);
+
+  return isLoading ? (
+    <div
+      className="d-flex justify-content-center"
+      style={{ paddingTop: "200px" }}
+    >
+      <div className="row">
+        <div className="col ">
+          <div className="spinner-grow text-danger" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+        <div className="col    ">
+          <div className="spinner-grow text-warning" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+        <div className="col ">
+          <div className="spinner-grow text-info" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <Formik
       initialValues={{
         firstName: "",
@@ -75,17 +140,58 @@ export default function studentSignUp(props) {
           .required("You must accept the terms and conditions.")
           .oneOf([true], "You must accept the terms and conditions.")
       })}
+      //  the handler function call only when the onSubmit event occurs
+      //  used for actual submission of form data that is responsible of student signUp.
       onSubmit={(values, { setSubmitting, resetForm }) => {
+        setLoading(true);
+
         Axios.post(`${API}/studentSignUp`, values)
           .then(response => {
-            if (response.status === 200) {
-              window.alert("Congratulations! Sign-Up successful ");
+            if (response.status === 200 && response.data) {
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Congratulations! Sign-Up successful :)",
+                showConfirmButton: true,
+                timer: 3000
+              });
+              resetForm();
+
               return props.history.push("/studentSignIn");
             }
 
-            return window.alert("Something Went Wrong!!! Please Try Again. ");
+            if (response.status === 200 && response.data === null) {
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Sign-Up Failed!!! Please Try Again.",
+                showConfirmButton: true,
+                timer: 5000
+              });
+              resetForm();
+              setLoading(false);
+            }
+
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Something Went Wrong!!! Please Try After Sometime.",
+              showConfirmButton: true,
+              timer: 5000
+            });
+            return props.history.push("/studentSignUp");
           })
-          .catch(error => error.message);
+          .catch(error => {
+            console.log(error.message);
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Something Went Wrong!!! Please Try After Sometime.",
+              showConfirmButton: true,
+              timer: 5000
+            });
+            return props.history.push("/studentSignUp");
+          });
         setSubmitting(true);
         resetForm();
       }}
@@ -93,10 +199,12 @@ export default function studentSignUp(props) {
       <Form>
         <br />
         <div className="d-flex justify-content-center">
-          <div className="col-sm-12 col-md-8">
+          <div className="col-sm-12 col-md-8 ">
             <div className="card text-white border-light bg-dark ">
-              <div className="card-header border-secondary text-danger text-center">
-                <h2>Student SignUp</h2>
+              <div className="card-header text-warning border-secondary  text-center">
+                <i>
+                  <h2> {"Student SignUp"}</h2>
+                </i>
               </div>
               <div className="card-body">
                 <div className="row">
@@ -108,7 +216,14 @@ export default function studentSignUp(props) {
                       className="form-control"
                     />
 
-                    <ErrorMessage name="firstName" />
+                    <ErrorMessage
+                      name="firstName"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                   <div className="col">
                     <Field
@@ -117,7 +232,15 @@ export default function studentSignUp(props) {
                       placeholder="Last Name"
                       className="form-control"
                     />
-                    <ErrorMessage name="lastName" />
+
+                    <ErrorMessage
+                      name="lastName"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -131,7 +254,14 @@ export default function studentSignUp(props) {
                       className="form-control"
                     />
 
-                    <ErrorMessage name="rollNumber" />
+                    <ErrorMessage
+                      name="rollNumber"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                   <div className="col">
                     <Field as="select" name="gender" className="custom-select">
@@ -144,7 +274,15 @@ export default function studentSignUp(props) {
                         </option>
                       ))}
                     </Field>
-                    <ErrorMessage name="gender" />
+
+                    <ErrorMessage
+                      name="gender"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -153,7 +291,7 @@ export default function studentSignUp(props) {
                   <div className="col">
                     <Field as="select" name="branch" className="custom-select">
                       <option disabled value="">
-                        B.Tech...
+                        Branch...
                       </option>
                       {arrayOfBranch.map((branch, index) => (
                         <option key={index} value={branch}>
@@ -161,7 +299,15 @@ export default function studentSignUp(props) {
                         </option>
                       ))}
                     </Field>
-                    <ErrorMessage name="branch" />
+
+                    <ErrorMessage
+                      name="branch"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                   <div className="col">
                     <Field
@@ -171,7 +317,14 @@ export default function studentSignUp(props) {
                       className="form-control"
                     />
 
-                    <ErrorMessage name="enrollmentNumber" />
+                    <ErrorMessage
+                      name="enrollmentNumber"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -184,7 +337,15 @@ export default function studentSignUp(props) {
                       placeholder="Father Name"
                       className="form-control"
                     />
-                    <ErrorMessage name="fatherName" />
+
+                    <ErrorMessage
+                      name="fatherName"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                   <div className="col">
                     <Field
@@ -203,7 +364,15 @@ export default function studentSignUp(props) {
                         )
                       )}
                     </Field>
-                    <ErrorMessage name="admissionSession" />
+
+                    <ErrorMessage
+                      name="admissionSession"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -219,7 +388,15 @@ export default function studentSignUp(props) {
                     <small id="emailHelp" className="form-text text-muted">
                       We'll never share your email with anyone else.
                     </small>
-                    <ErrorMessage name="email" />
+
+                    <ErrorMessage
+                      name="email"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -232,7 +409,15 @@ export default function studentSignUp(props) {
                       placeholder="password"
                       className="form-control"
                     />
-                    <ErrorMessage name="password" />
+
+                    <ErrorMessage
+                      name="password"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -245,7 +430,15 @@ export default function studentSignUp(props) {
                       placeholder="confirmPassword"
                       className="form-control"
                     />
-                    <ErrorMessage name="confirmPassword" />
+
+                    <ErrorMessage
+                      name="confirmPassword"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -257,7 +450,14 @@ export default function studentSignUp(props) {
                       Accept Terms & Conditions
                     </label>{" "}
                     <br />
-                    <ErrorMessage name="acceptTerms" />
+                    <ErrorMessage
+                      name="acceptTerms"
+                      render={msg => (
+                        <div className="alert alert-primary" role="alert">
+                          {msg}
+                        </div>
+                      )}
+                    />
                   </div>
                 </div>
 
@@ -266,9 +466,11 @@ export default function studentSignUp(props) {
                   <div className="col text-center">
                     <button
                       type="submit"
-                      className="btn  btn-outline-secondary btn-block"
+                      className="btn  btn-outline-warning btn-block"
                     >
-                      <b> Sign Up</b>
+                      <i>
+                        <b>{"Sign Up"}</b>
+                      </i>
                     </button>
                   </div>
                 </div>
