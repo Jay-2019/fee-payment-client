@@ -1,6 +1,7 @@
 import React from 'react'
 import {
     StudentProfile,
+    UpdateStudentProfile,
     CourseFee,
     BackFee,
     SignOut,
@@ -17,6 +18,7 @@ const privateRoutes = (props) => {
 
         { path: "/studentProfile/:id", component: StudentProfile },
         { path: "/myProfile/:id", component: StudentProfile },
+        { path: "/updateStudentProfile/:id", component: UpdateStudentProfile },
         { path: "/courseFeeReceipt/:id", component: CourseFeeReceipt },
         { path: "/backFeeReceipt/:id", component: BackFeeReceipt },
         { path: "/courseFee/:id", component: CourseFee },

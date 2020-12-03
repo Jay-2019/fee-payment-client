@@ -1,7 +1,7 @@
 import React from "react";
 // import style from "../../style/style.module.css";
 import { Link } from 'react-router-dom';
-import printIcon from '../../assets/index';
+import {printIcon} from '../../assets/index';
 
 export default function useCourseFeeReceipt(props) {
     const Card = ({ feeId, feeInfo, studentInfo, createdAt }) => (

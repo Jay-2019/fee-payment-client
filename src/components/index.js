@@ -1,6 +1,7 @@
 import StudentSignUp from "./studentSignUp/studentSignUp";
 import StudentSignIn from "./studentSignIn/studentSignIn";
 import StudentProfile from "./studentProfile/studentProfile";
+import UpdateStudentProfile from "./updateStudentProfile/updateStudentProfile";
 import CourseFee from "./courseFee/courseFee";
 import BackFee from "./backFee/backFee";
 import SignOut from "./signOut/signOut";
@@ -12,6 +13,7 @@ export {
     StudentSignUp,
     StudentSignIn,
     StudentProfile,
+    UpdateStudentProfile,
     CourseFee, BackFee,
     SignOut,
     CourseFeeReceipt,

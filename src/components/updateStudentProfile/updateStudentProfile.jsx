@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import Swal from "sweetalert2";
 import Axios from "axios";
 import API from "../config";
-
+import { useNavigationBar } from "../customHooks/index";
 import {
   arrayOfMinorityType,
   arrayOfDomicile,
@@ -13,7 +13,9 @@ import {
   arrayOfAdmissionSession
 } from "../constant";
 
-export default function StudentSignUp(props) {
+export default function UpdateStudentProfile(props) {
+  const { student } = props.parentProps;
+  const navigationBar = useNavigationBar(props.parentProps.student.firstName);
   const [arrayOfBranch, setArrayOfBranch] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -84,25 +86,25 @@ export default function StudentSignUp(props) {
   ) : (
     <Formik
       initialValues={{
-        firstName: "",
-        lastName: "",
-        email: "",
-        rollNo: "",
-        gender: "",
-        branch: "",
-        fatherName: "",
-        motherName: "",
-        admissionSession: "",
-        enrollmentNumber: "",
-        caste: "",
-        domicile: "",
-        minority: "",
-        minorityType: "",
-        physicalHandicap: "",
-        physicalHandicapType: "",
-        password: "",
-        confirmPassword: "",
-        acceptTerms: ""
+        firstName: student.firstName,
+        lastName: student.lastName,
+        email: student.email,
+        rollNumber: student.rollNumber,
+        gender: student.gender,
+        branch: student.branch,
+        fatherName: student.fatherName,
+        motherName: student.motherName,
+        admissionSession: student.admissionSession,
+        enrollmentNumber: student.enrollmentNumber,
+        caste: student.caste,
+        domicile: student.domicile,
+        minority: student.minority,
+        minorityType: student.minorityType,
+        physicalHandicap: student.physicalHandicap,
+        physicalHandicapType: student.physicalHandicapType,
+        password: student.password,
+        confirmPassword: student.confirmPassword,
+        acceptTerms: student.acceptTerms
       }}
       validationSchema={Yup.object({
         firstName: Yup.string()
@@ -153,13 +155,13 @@ export default function StudentSignUp(props) {
           )
           .required("Enrollment Number Required"),
         minority: Yup.string()
-          .oneOf(["yes", "no"], "Invalid Minority")
+          .oneOf(["YES", "NO"], "Invalid Minority")
           .required("Minority option is Required"),
         minorityType: Yup.string()
           .oneOf(arrayOfMinorityType, "Invalid Minority")
           .required("Please Specify Minority"),
         physicalHandicap: Yup.string()
-          .oneOf(["yes", "no"], "Invalid Option Physical Handicap")
+          .oneOf(["YES", "NO"], "Invalid Option Physical Handicap")
           .required("Physical Handicap option is Required"),
         physicalHandicapType: Yup.string()
           .matches(/[a-zA-Z]/, "only contain letters.")
@@ -181,26 +183,31 @@ export default function StudentSignUp(props) {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         setLoading(true);
 
-        Axios.post(`${API}/studentSignUp`, values)
+        Axios.post(
+          `${API}/updateStudentProfile/${localStorage.getItem("token")}`,
+          values
+        )
           .then(response => {
             if (response.status === 200 && response.data) {
               Swal.fire({
                 position: "center",
                 icon: "success",
-                title: "Congratulations! Sign-Up successful :)",
+                title: "Congratulations! Profile Successfully Update :)",
                 showConfirmButton: true,
                 timer: 3000
               });
               resetForm();
 
-              return props.history.push("/studentSignIn");
+              return props.history.push(
+                `/studentProfile/${localStorage.getItem("token")}`
+              );
             }
 
             if (response.status === 200 && response.data === null) {
               Swal.fire({
                 position: "center",
                 icon: "error",
-                title: "Sign-Up Failed!!! Please Try Again.",
+                title: "Profile Update Failed!!! Please Try Again.",
                 showConfirmButton: true,
                 timer: 5000
               });
@@ -215,7 +222,9 @@ export default function StudentSignUp(props) {
               showConfirmButton: true,
               timer: 5000
             });
-            return props.history.push("/studentSignUp");
+            return props.history.push(
+              `/studentProfile/${localStorage.getItem("token")}`
+            );
           })
           .catch(error => {
             console.log(error.message);
@@ -226,7 +235,9 @@ export default function StudentSignUp(props) {
               showConfirmButton: true,
               timer: 5000
             });
-            return props.history.push("/studentSignUp");
+            return props.history.push(
+              `/studentProfile/${localStorage.getItem("token")}`
+            );
           });
         setSubmitting(true);
         resetForm();
@@ -234,13 +245,14 @@ export default function StudentSignUp(props) {
     >
       {({ values }) => (
         <Form>
-          <br />
+          {navigationBar}
+          <hr />
           <div className="d-flex justify-content-center">
             <div className="col-sm-12 col-md-8 ">
               <div className="card text-white border-light bg-dark ">
                 <div className="card-header text-warning border-secondary  text-center">
                   <i>
-                    <h2> {"Student SignUp"}</h2>
+                    <h2> {"Update Profile"}</h2>
                   </i>
                 </div>
                 <div className="card-body">
@@ -508,7 +520,7 @@ export default function StudentSignUp(props) {
                         className="btn"
                         type="radio"
                         name="minority"
-                        value="yes"
+                        value="YES"
                       />
                       &nbsp;
                       <label htmlFor="minority" className="form-check-label">
@@ -520,7 +532,7 @@ export default function StudentSignUp(props) {
                         className="btn"
                         type="radio"
                         name="minority"
-                        value="no"
+                        value="NO"
                       />
                       &nbsp;
                       <label htmlFor="minority" className="form-check-label">
@@ -539,7 +551,7 @@ export default function StudentSignUp(props) {
                   </div>
 
                   {/* Minority Type (Option Display Only If Minority is True) */}
-                  {values.minority === "yes" ? (
+                  {values.minority === "YES" ? (
                     <>
                       <hr />
                       <div className="row">
@@ -581,7 +593,7 @@ export default function StudentSignUp(props) {
                         className="btn"
                         type="radio"
                         name="physicalHandicap"
-                        value="yes"
+                        value="YES"
                       />
                       &nbsp;
                       <label
@@ -596,7 +608,7 @@ export default function StudentSignUp(props) {
                         className="btn"
                         type="radio"
                         name="physicalHandicap"
-                        value="no"
+                        value="NO"
                       />
                       &nbsp;
                       <label
@@ -618,7 +630,7 @@ export default function StudentSignUp(props) {
                   </div>
 
                   {/* Physical Handicap Type */}
-                  {values.physicalHandicap === "yes" ? (
+                  {values.physicalHandicap === "YES" ? (
                     <>
                       <hr />
                       <div className="row">
@@ -746,20 +758,10 @@ export default function StudentSignUp(props) {
                         className="btn  btn-outline-warning btn-block"
                       >
                         <i>
-                          <b>{"Sign Up"}</b>
+                          <b>{"Update Profile"}</b>
                         </i>
                       </button>
                     </div>
-                  </div>
-
-                  {/* SignIn Hyperlink */}
-                  <div className="text-center">
-                    <small id="note" className="form-text text-muted">
-                      {"If You Are Lost Here Back To"}
-                      <a href="/studentSignIn">
-                        <b>{" Sign-In "}</b>
-                      </a>
-                    </small>
                   </div>
                 </div>
 
@@ -773,4 +775,4 @@ export default function StudentSignUp(props) {
       )}
     </Formik>
   );
-}
+};

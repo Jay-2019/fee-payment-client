@@ -1,5 +1,61 @@
 // list of all constants in the application
 
+export const arrayOfCaste = [
+    "SC",
+    "ST",
+    "OBC",
+    "UR"
+];
+
+export const arrayOfDomicile = [
+    "Madhya Pradesh",
+    "Uttar Pradesh",
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar	",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry"
+
+];
+
+export const arrayOfMinorityType = [
+    "Muslim",
+    "Sikh",
+    "Christian",
+    "Buddhist",
+    "Parsi",
+    "Jain"
+];
+
 export const arrayOfAge = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
 
 export const arrayOfBranch = [
@@ -19,7 +75,7 @@ export const arrayOfAdmissionSession = [
     "2022-2023", "2023-2024", "2024-2025", "2025-2026",
     "2026-2027", "2027-2028", "2028-2029", "2029-2030",
     "2030-2031", "2031-2032", "2032-2033", "2033-2034",
-    "2034-2035","2035-2036", "2036-2037", "2037-2038",
+    "2034-2035", "2035-2036", "2036-2037", "2037-2038",
 ];
 
 
